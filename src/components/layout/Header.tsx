@@ -1,19 +1,16 @@
-'use client';
-
-// import { useUser } from '@/hooks/use-user';
-// import RoleBadge from '@/components/auth/role-badge';
-// import { UserRole } from '@/lib/auth/roles';
-// import { LogoutButton } from '../logout-button'
+import RoleBadge from '@/components/RoleBadge';
+import { UserRole } from '@/lib/roles';
+import { LogoutButton } from '@/components/LogoutButton'
 import { Menu } from 'lucide-react';
 import { Button } from '../ui/button';
+import { useAuthStore } from '@/stores/authStore';
 
 interface AppHeaderProps {
 	onMenuClick?: () => void;
 }
 
 export default function Header({ onMenuClick }: AppHeaderProps) {
-	// const user = useUser((state) => state.user);
-	const user = { username: 'Juan', role: 'admin' };
+	const { user } = useAuthStore();
 
 	return (
 		<header className='bg-card border-b border-border'>
@@ -36,9 +33,9 @@ export default function Header({ onMenuClick }: AppHeaderProps) {
 						<div className='flex items-center gap-4'>
 							<div className='text-right hidden sm:block'>
 								<p className='font-semibold text-sm text-foreground'>{user.username}</p>
-								{/* <RoleBadge role={user.role as UserRole} /> */}
+								<RoleBadge role={user.role as UserRole} />
 							</div>
-							{/* <LogoutButton /> */}
+							<LogoutButton />
 						</div>
 					)}
 					</div>

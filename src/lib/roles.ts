@@ -1,12 +1,14 @@
 /**
  * Tipos de roles disponibles en el sistema
  */
-export enum UserRole {
-  SUPER_ADMIN = 'SUPER_ADMIN',
-  ADMIN = 'ADMIN',
-  OPERATOR = 'OPERATOR',
-  USER = 'USER',
-}
+export const UserRole = {
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  ADMIN: 'ADMIN',
+  OPERATOR: 'OPERATOR',
+  USER: 'USER',
+} as const;
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole];
 
 /**
  * Jerarquía de roles (de mayor a menor privilegio)

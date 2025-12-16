@@ -1,5 +1,3 @@
-	"use client"
-
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Users, Settings, BarChart3, PanelLeftClose, FileSpreadsheet } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -12,7 +10,7 @@ const navItems = [
 	{ href: '/dashboard/reports', label: 'Reportes', icon: BarChart3 },
 ];
 
-interface SidebarProps {
+interface SidebarProps {	
 	className?: string,
 	onMenuClick?: () => void,
 }

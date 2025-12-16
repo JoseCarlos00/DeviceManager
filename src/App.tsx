@@ -3,6 +3,7 @@ import { ThemeProvider } from '@/components/theme-provider'
 import  Login  from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import ProtectedLayout from './components/ProtectedLayout';
+import Devices from './pages/Devices'
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
 
         <Route element={<ProtectedLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
-          {/* <Route path="/devices" element={<Devices />} /> */}
+          <Route path="/dashboard/devices" element={<Devices />} />
         </Route>
         
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
