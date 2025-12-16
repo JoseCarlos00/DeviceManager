@@ -5,10 +5,16 @@ import { Wifi, WifiOff } from 'lucide-react';
 
 import DataTableColumnHeader from '@/components/devices/DataTableHeader';
 import ActionsMenu from './ActionMenu';
+import { AutoFocusInput } from '../ui/AutoFocusInput';
+import { submittedEventServer } from '@/lib/constants'
 
 interface DeviceTableMeta {
 	emitEvent: EventSubmittedHandlers;
 	isConnected: boolean;
+	setMessageRowId: (id: string | null) => void;
+	setMessageText: (text: string) => void;
+	messageRowId: string | null;
+	messageText: string;
 }
 
 export const columns: ColumnDef<Device>[] = [
@@ -16,7 +22,14 @@ export const columns: ColumnDef<Device>[] = [
 		id: 'actions',
 		cell: ({ row, table }) => {
 			const meta = table.options.meta as DeviceTableMeta;
-			return <ActionsMenu row={row} emitEvent={meta.emitEvent} isConnected={meta.isConnected} />;
+			return (
+				<ActionsMenu
+					row={row}
+					emitEvent={meta.emitEvent}
+					table={table}
+					isConnected={meta.isConnected}
+				/>
+			);
 		},
 		enableHiding: false,
 	},
@@ -44,12 +57,18 @@ export const columns: ColumnDef<Device>[] = [
 			}
 
 			return online ? (
-				<Badge variant='default' className='gap-1 bg-green-600 hover:bg-green-700'>
+				<Badge
+					variant='default'
+					className='gap-1 bg-green-600 hover:bg-green-700'
+				>
 					<Wifi className='h-3 w-3' />
 					Conectado
 				</Badge>
 			) : (
-				<Badge variant='secondary' className='gap-1'>
+				<Badge
+					variant='secondary'
+					className='gap-1'
+				>
 					<WifiOff className='h-3 w-3' />
 					Desconectado
 				</Badge>
@@ -70,10 +89,45 @@ export const columns: ColumnDef<Device>[] = [
 				title='Android Id'
 			/>
 		),
-		cell: ({ row }) => {
+		cell: ({ row, table }) => {
 			const androidId = row.getValue('androidId') as string | null;
+			const meta = table.options.meta as DeviceTableMeta;
+
+			if (meta.messageRowId === row.id) {
+				return (
+					<AutoFocusInput
+						className='h-7'
+						value={meta.messageText}
+						onChange={(e) => meta.setMessageText(e.target.value)}
+						placeholder='Escribe el mensaje'
+						onKeyDown={(e) => {
+							if (e.key === 'Enter') {
+								const payload = {
+									target_device_id: androidId!,
+									dataMessage: {
+										message: meta.messageText,
+										sender: 'Admin',
+									},
+								};
+								
+								meta.emitEvent[submittedEventServer.SEND_MESSAGE](payload, (response)=> {
+									console.log('Respuesta del servidor para mensaje:', response);
+								})
+								console.log(`Enviando mensaje a ${androidId}`);
+								meta.setMessageRowId(null);
+								meta.setMessageText('');
+							}
+							if (e.key === 'Escape') {
+								meta.setMessageRowId(null);
+								meta.setMessageText('');
+							}
+						}}
+					/>
+				);
+			}
 			return <div className='font-mono text-sm'>{androidId || <span className='text-muted-foreground'>N/A</span>}</div>;
 		},
+		enableHiding: false,
 	},
 	{
 		accessorKey: 'equipo',

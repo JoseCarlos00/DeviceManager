@@ -21,6 +21,7 @@ import  DataTable  from '@/components/devices/DataTable';
 import DataTableViewOptions from '@/components/devices/dataTableViewOptions';
 
 import { useDeviceWebSocket } from '@/hooks/useDeviceWebSocket';
+import { TableProvider } from '@/hooks/useTable';
 
 export default function TableContent() {
 	'use no memo';
@@ -31,6 +32,8 @@ export default function TableContent() {
 	const [globalFilter, setGlobalFilter] = useState('');
 	const columns = useMemo<ColumnDef<Device>[]>(() => deviceColumns, []);
 	const { devices, isConnected, isRefreshing, refresh, emitEvent } = useDeviceWebSocket();
+	const [messageRowId, setMessageRowId] = useState<string | null>(null);
+	const [messageText, setMessageText] = useState('');
 
 	const tableState = useMemo(
 		() => ({ sorting, columnFilters, columnVisibility, globalFilter }),
@@ -51,6 +54,10 @@ export default function TableContent() {
 		meta: {
 			emitEvent,
 			isConnected,
+			setMessageRowId,
+			setMessageText,
+			messageRowId,
+			messageText,
 		},
 	});
 
@@ -166,10 +173,12 @@ export default function TableContent() {
 			</CardHeader>
 
 			<CardContent className='grow flex'>
-				<DataTable
-					columns={columns}
-					table={table}
-				/>
+				<TableProvider value={table}>
+					<DataTable
+						columns={columns}
+						table={table}
+					/>
+				</TableProvider>
 			</CardContent>
 		</Card>
 	);
