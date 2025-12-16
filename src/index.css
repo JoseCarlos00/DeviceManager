@@ -38,6 +38,11 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+.scroller  {
+  scrollbar-color: rgb(59, 59, 61) #ffffff00;
+  scrollbar-width: thin;
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

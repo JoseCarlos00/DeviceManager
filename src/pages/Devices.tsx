@@ -1,5 +1,5 @@
+import TableContent from '@/components/devices/TableContent';
+
 export default function Devices() {
-  return (
-    <div>Devices</div>
-  )
+	return <TableContent />;
 }
