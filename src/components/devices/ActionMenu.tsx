@@ -1,6 +1,6 @@
 import type { HTMLAttributes } from 'react';
 import type { Row } from '@tanstack/react-table';
-import { MoreHorizontal, Ellipsis } from 'lucide-react';
+import { MoreHorizontal } from 'lucide-react';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -11,32 +11,36 @@ import {
 import { Button } from '@/components/ui/button';
 import type { Device } from '@/types';
 
+type ActionType = 'ping' | 'alert' | 'message';
+
 interface ActionsMenuProps<TValue> extends HTMLAttributes<HTMLDivElement> {
 	row: Row<TValue>;
+	sendPing: (payload: { target_device_id: string }) => void;
+	isConnected: boolean;
 }
 
-export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
-	const isConnected = true;
+export default function ActionsMenu<TValue>({ row, sendPing, isConnected }: ActionsMenuProps<TValue>) {
 	const currentUser = row.original as Device;
 	
-	if (!currentUser.androidId) {
+	if (!currentUser.androidId || !currentUser.online) {
 		return (
 			<span className='inline-flex items-center justify-center size-8 opacity-50'>
-				{/* <Ellipsis className='size-4' /> */}
 			</span>
 		);
 	}
 
-	const handleAction = (action: 'ping' | 'alert' | 'message') => {
+
+	const handleAction = (action: ActionType) => {
 		if (!currentUser.androidId) return;
 
 		const payload = {
-			targetId: currentUser.androidId,
-			// Puedes añadir más datos aquí si es necesario
+			target_device_id: currentUser.androidId,
 		};
 
-		// sendMessage(action, payload);
-		console.log(`Enviando '${action}' a ${currentUser.androidId}`);
+		if (action === 'ping') {
+			sendPing(payload);
+			console.log(`Enviando PING a ${currentUser.androidId}`);
+		}
 	};
 
 	return (

@@ -4,6 +4,7 @@ import type { Socket } from 'socket.io-client';
 import { apiClient } from '@/lib/api';
 import type { Device } from '@/types';
 import { setupSocket, cleanupSocket } from './socketSetup';
+import { submittedEventServer } from '@/lib/constants'
 
 export function useDeviceWebSocket() {
 	const [devices, setDevices] = useState<Device[]>([]);
@@ -67,13 +68,45 @@ export function useDeviceWebSocket() {
 		socketRef.current = socket;
 
 		// Cleanup
-    const socketInstance = socketRef.current;
+		const socketInstance = socketRef.current;
 		const timeoutId = reconnectTimeoutRef.current;
-    
+
 		return () => {
 			cleanupSocket(socketInstance, timeoutId);
 		};
 	}, [fetchDevices, updateDeviceInState, addOrUpdateDevice]);
+
+	// ============ EMISIÓN DE EVENTOS ============
+
+	const sendMessage = useCallback((payload: unknown) => {
+		if (socketRef.current && socketRef.current.connected) {
+			socketRef.current.emit(submittedEventServer.SEND_MESSAGE, payload);
+		} else {
+			console.warn('[WebSocket] No se pudo enviar el mensaje, el socket no está conectado.');
+			toast.warning('No se pudo realizar la acción', {
+				description: 'No hay conexión con el servidor.',
+			});
+		}
+	}, []);
+
+	const sendPing = useCallback((payload: unknown) => {
+		if (socketRef.current && socketRef.current.connected) {
+			socketRef.current.timeout(5000).emit(submittedEventServer.SEND_PING, payload, (error, response) => {
+				if (error) {
+					console.error('[WebSocket] Error al enviar el PING:', error);
+					toast.error('Error al enviar el PING');
+				} else {
+					console.log('[WebSocket] Respuesta al PING:', response);
+					toast.success('PING enviado con éxito');
+				}
+			});
+		} else {
+			console.warn('[WebSocket] No se pudo enviar el PING, el socket no está conectado.');
+			toast.warning('No se pudo realizar la acción', {
+				description: 'No hay conexión con el servidor.',
+			});
+		}
+	}, []);
 
 	// ============ REFRESH MANUAL ============
 
@@ -88,5 +121,7 @@ export function useDeviceWebSocket() {
 		isConnected,
 		isRefreshing,
 		refresh,
+		sendMessage,
+		sendPing,
 	};
 }

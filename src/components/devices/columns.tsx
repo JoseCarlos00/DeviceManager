@@ -1,15 +1,24 @@
 import type { Device } from '@/types';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef, TableMeta } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
 import { Wifi, WifiOff } from 'lucide-react';
 
 import DataTableColumnHeader from '@/components/devices/DataTableHeader';
 import ActionsMenu from './ActionMenu';
 
+interface DeviceTableMeta extends TableMeta<Device> {
+	sendPing: (payload: { targetId: string }) => void;
+	sendMessage: (payload: { targetId: string }) => void;
+	isConnected: boolean;
+}
+
 export const columns: ColumnDef<Device>[] = [
 	{
 		id: 'actions',
-		cell: ({ row }) => <ActionsMenu row={row} />,
+		cell: ({ row, table }) => {
+			const meta = table.options.meta as DeviceTableMeta;
+			return <ActionsMenu row={row} sendPing={meta.sendPing} isConnected={meta.isConnected} />;
+		},
 		enableHiding: false,
 	},
 	{

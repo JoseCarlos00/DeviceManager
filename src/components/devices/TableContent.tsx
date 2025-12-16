@@ -30,7 +30,7 @@ export default function TableContent() {
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [globalFilter, setGlobalFilter] = useState('');
 	const columns = useMemo<ColumnDef<Device>[]>(() => deviceColumns, []);
-	const { devices, isConnected, isRefreshing, refresh } = useDeviceWebSocket();
+	const { devices, isConnected, isRefreshing, refresh, sendPing, sendMessage } = useDeviceWebSocket();
 
 	const tableState = useMemo(
 		() => ({ sorting, columnFilters, columnVisibility, globalFilter }),
@@ -48,6 +48,11 @@ export default function TableContent() {
 		getSortedRowModel: getSortedRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		state: tableState,
+		meta: {
+			sendPing,
+			sendMessage,
+			isConnected,
+		},
 	});
 
 	// Estado de carga inicial
