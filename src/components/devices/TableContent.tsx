@@ -17,7 +17,7 @@ import { Search, WifiIcon, WifiOffIcon, RefreshCw } from 'lucide-react';
 
 import { type Device } from '@/types';
 import { columns as deviceColumns } from '@/components/devices/columns';
-import DataTable from '@/components/devices/DataTable';
+import  DataTable  from '@/components/devices/DataTable';
 import DataTableViewOptions from '@/components/devices/dataTableViewOptions';
 
 import { useDeviceWebSocket } from '@/hooks/useDeviceWebSocket';
@@ -30,7 +30,7 @@ export default function TableContent() {
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [globalFilter, setGlobalFilter] = useState('');
 	const columns = useMemo<ColumnDef<Device>[]>(() => deviceColumns, []);
-	const { devices, isConnected, isRefreshing, refresh, sendPing, sendMessage } = useDeviceWebSocket();
+	const { devices, isConnected, isRefreshing, refresh, emitEvent } = useDeviceWebSocket();
 
 	const tableState = useMemo(
 		() => ({ sorting, columnFilters, columnVisibility, globalFilter }),
@@ -49,8 +49,7 @@ export default function TableContent() {
 		getFilteredRowModel: getFilteredRowModel(),
 		state: tableState,
 		meta: {
-			sendPing,
-			sendMessage,
+			emitEvent,
 			isConnected,
 		},
 	});

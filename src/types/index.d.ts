@@ -1,6 +1,6 @@
 export * from './user';
 export * from './device';
-export * from './api';
+export * from './websocket';
 
 // Tipos utilitarios globales
 export type Nullable<T> = T | null;

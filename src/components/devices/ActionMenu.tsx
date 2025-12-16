@@ -10,16 +10,16 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import type { Device } from '@/types';
-
-type ActionType = 'ping' | 'alert' | 'message';
+import { submittedEventServer } from '@/lib/constants';
+import type { EventSubmittedHandlers, Callback } from '@/types';
 
 interface ActionsMenuProps<TValue> extends HTMLAttributes<HTMLDivElement> {
 	row: Row<TValue>;
-	sendPing: (payload: { target_device_id: string }) => void;
+	emitEvent: EventSubmittedHandlers;
 	isConnected: boolean;
 }
 
-export default function ActionsMenu<TValue>({ row, sendPing, isConnected }: ActionsMenuProps<TValue>) {
+export default function ActionsMenu<TValue>({ row, emitEvent, isConnected }: ActionsMenuProps<TValue>) {
 	const currentUser = row.original as Device;
 	
 	if (!currentUser.androidId || !currentUser.online) {
@@ -30,17 +30,35 @@ export default function ActionsMenu<TValue>({ row, sendPing, isConnected }: Acti
 	}
 
 
-	const handleAction = (action: ActionType) => {
+	const handleAction = (action: 'ping' | 'alert' | 'message') => {
 		if (!currentUser.androidId) return;
 
-		const payload = {
-			target_device_id: currentUser.androidId,
+		const callback: Callback = (response) => {
+			console.log(`Respuesta del servidor para ${action}:`, response);
 		};
 
 		if (action === 'ping') {
-			sendPing(payload);
+			const payload = {
+				target_device_id: currentUser.androidId
+			};
+			
+			emitEvent[submittedEventServer.SEND_PING](payload, callback);
 			console.log(`Enviando PING a ${currentUser.androidId}`);
 		}
+
+		if(action === 'message') {
+			const payload = {
+				target_device_id: currentUser.androidId,
+				dataMessage: {
+					message: 'Test message',
+					sender: 'Admin'
+				}
+			};
+
+			emitEvent[submittedEventServer.SEND_MESSAGE](payload, callback);
+			console.log(`Enviando mensaje a ${currentUser.androidId}`);
+		}
+
 	};
 
 	return (

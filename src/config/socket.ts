@@ -1,4 +1,4 @@
-import type { SocketConfig } from '@/types/websocket';
+import type { SocketConfig } from '@/types';
 
 export const SOCKET_CONFIG: SocketConfig = {
 	withCredentials: true,
