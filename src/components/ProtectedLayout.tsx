@@ -5,8 +5,6 @@ import AppHeader from '@/components/layout/Header';
 import AppSidebar from '@/components/layout/Sidebar';
 import { cn } from '@/lib/utils';
 
-
-
 export default function ProtectedLayout() {
   const { isAuthenticated, isLoading, checkAuth } = useAuthStore();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
