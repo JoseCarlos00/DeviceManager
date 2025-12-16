@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom'; // Cambiado Navigate a useNavigate
 import { useAuthStore } from '@/stores/authStore';
 import AppHeader from '@/components/layout/Header';
 import AppSidebar from '@/components/layout/Sidebar';
@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 
 export default function ProtectedLayout() {
   const { isAuthenticated, isLoading, checkAuth } = useAuthStore();
+  const navigate = useNavigate(); // Inicializamos useNavigate
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
     const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
@@ -15,15 +16,17 @@ export default function ProtectedLayout() {
     checkAuth();
   }, [checkAuth]);
 
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      navigate('/login?error=session_expired');
+    }
+  }, [isAuthenticated, isLoading, navigate]);
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
- return (
+  return isAuthenticated ? (
     <div className='flex min-h-screen w-full flex-col bg-muted/40'>
       {/* Sidebar para móviles (overlay) y para desktop (fijo) */}
       <AppSidebar
@@ -47,6 +50,6 @@ export default function ProtectedLayout() {
           className='fixed inset-0 z-40 bg-black/50 lg:hidden'
         />
       )}
-    </div>
-  );
+    </div> 
+  ) : null;
 }

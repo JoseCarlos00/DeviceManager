@@ -1,11 +1,16 @@
-// src/lib/apiClient.ts
 import axios from 'axios';
-// import { API_URL_AUTH } from './constants';
 
-// Cliente axios configurado para el proxy de Vite
+// Cliente público: sin interceptores, para endpoints como login/register.
+const publicApiClient = axios.create({
+	baseURL: '/api',
+	withCredentials: true,
+	timeout: 10000,
+});
+
+// Cliente autenticado: con interceptor para manejar la renovación de tokens.
 const apiClient = axios.create({
-	baseURL: '/api', // ✅ Usa el proxy de Vite
-	withCredentials: true, // ✅ Envía cookies automáticamente
+	baseURL: '/api',
+	withCredentials: true,
 	timeout: 10000,
 });
 
@@ -96,4 +101,4 @@ apiClient.interceptors.response.use(
 	}
 );
 
-export default apiClient;
+export { publicApiClient, apiClient }

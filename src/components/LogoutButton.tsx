@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom'; 
 import { useAuthStore } from "@/stores/authStore";
 import { Button } from '@/components/ui/button';
 import {
@@ -19,18 +19,17 @@ import { LogOut, Loader2 } from 'lucide-react';
 export function LogoutButton() {
 	const [isLoading, setIsLoading] = useState(false);
 	const { logout } = useAuthStore();
-
+	const navigate = useNavigate();
 
 	const handleLogout = async () => {
 		setIsLoading(true);
 
 		try {
 			await logout();
-			<Navigate to="/login?message=logout_success" replace />;
+			navigate('/login?message=logout_success');
 		} catch (error) {
 			console.error('Error en logout:', error);
-			// Redirigir de todos modos
-			<Navigate to="/login?message=logout_success" replace />;
+			navigate('/login?message=logout_success');
 		} finally {
 			setIsLoading(false);
 		}

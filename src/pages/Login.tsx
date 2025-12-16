@@ -1,99 +1,48 @@
-// src/pages/Login.tsx
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '@/stores/authStore';
+import {useSearchParams } from 'react-router-dom'
+import LoginForm from '@/components/auth/LoginForm';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Terminal } from 'lucide-react';
 
-export default function Login() {
-	const [username, setUsername] = useState('');
-	const [password, setPassword] = useState('');
-	const [error, setError] = useState('');
-	const [loading, setLoading] = useState(false);
 
-	const navigate = useNavigate();
-	const { login, isAuthenticated } = useAuthStore();
+export default function LoginPage() {
+  const [searchParams] = useSearchParams();
 
-	// Si ya está autenticado, redirige
-	useEffect(() => {
-		if (isAuthenticated) {
-			navigate('/dashboard', { replace: true });
-		}
-	}, [isAuthenticated, navigate]);
-
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
-		setError('');
-		setLoading(true);
-
-		try {
-			await login(username, password);
-			navigate('/dashboard');
-		} catch (err) {
-			setError(err instanceof Error ? err.message : 'Error al iniciar sesión');
-		} finally {
-			setLoading(false);
-		}
-	};
+	const errorMessage = searchParams.get('error') ?? '';
+	const successMessage = searchParams.get('message') ?? '';
 
 	return (
-		<div className='flex items-center justify-center min-h-screen bg-background'>
-			<div className='w-full max-w-md p-8 space-y-6 bg-card rounded-lg shadow-lg border'>
-				<div className='text-center'>
-					<h1 className='text-3xl font-bold'>Device Manager</h1>
-					<p className='text-muted-foreground mt-2'>Inicia sesión en tu cuenta</p>
+		<div className='min-h-screen flex items-center justify-center bg-background p-4'>
+			{/* Fondo con gradiente sutil */}
+			<div className='absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-size-[14px_24px]'></div>
+
+			<div className='w-full max-w-md px-4'>
+				<div className='mb-8 text-center'>
+					<h1 className='text-3xl font-bold text-foreground'>SentinelView</h1>
+					<p className='text-muted-foreground mt-2'>Panel de Administración</p>
 				</div>
 
-				<form
-					onSubmit={handleSubmit}
-					className='space-y-4'
-				>
-					<div>
-						<label
-							htmlFor='email'
-							className='block text-sm font-medium mb-2'
-						>
-							Email
-						</label>
-						<input
-							id='email'
-							type='text'
-							value={username}
-							onChange={(e) => setUsername(e.target.value)}
-							className='w-full px-3 py-2 border rounded-md bg-background'
-							placeholder='Juan'
-							required
-							disabled={loading}
-						/>
-					</div>
+				{/* Alerta de Éxito: Usando variante 'default' con colores de tema */}
+				{successMessage === 'logout_success' && (
+					<Alert className='mb-4 border-green-500/50 text-green-700 dark:text-green-400'>
+						<Terminal className='h-4 w-4 text-green-700 dark:text-green-400' />
+						<AlertTitle className='text-green-800 dark:text-green-300'>Sesión Cerrada</AlertTitle>
+						<AlertDescription>Has cerrado sesión exitosamente.</AlertDescription>
+					</Alert>
+				)}
 
-					<div>
-						<label
-							htmlFor='password'
-							className='block text-sm font-medium mb-2'
-						>
-							Contraseña
-						</label>
-						<input
-							id='password'
-							type='password'
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							className='w-full px-3 py-2 border rounded-md bg-background'
-							placeholder='••••••••'
-							required
-							disabled={loading}
-						/>
-					</div>
-
-					{error && <div className='p-3 text-sm text-red-500 bg-red-50 dark:bg-red-950 rounded-md'>{error}</div>}
-
-					<button
-						type='submit'
-						disabled={loading}
-						className='w-full py-2 px-4 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
+				{/* Muestra Alerta de Error: error=session_expired */}
+				{errorMessage === 'session_expired' && (
+					<Alert
+						variant='destructive'
+						className='mb-4'
 					>
-						{loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
-					</button>
-				</form>
+						<Terminal className='h-4 w-4' />
+						<AlertTitle>Sesión Expirada</AlertTitle>
+						<AlertDescription>Tu sesión ha expirado. Por favor, inicia sesión de nuevo.</AlertDescription>
+					</Alert>
+				)}
+
+				<LoginForm />
 			</div>
 		</div>
 	);
