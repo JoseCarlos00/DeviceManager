@@ -3,6 +3,7 @@ import { io, Socket } from 'socket.io-client';
 import { SOCKET_CONFIG } from '@/config/socket';
 import { createConnectionHandlers, createDeviceHandlers, createDataHandlers } from './handlers';
 import type { Device } from '@/types'
+import { receivedEventServer } from "@/lib/constants";
 
 interface SetupSocketParams {
 	setIsConnected: (value: boolean) => void;
@@ -37,14 +38,14 @@ export const setupSocket = ({
 
 	// ============ REGISTRAR EVENTOS DE DISPOSITIVOS ============
 
-	socket.on('device:connected', deviceHandlers.onDeviceConnected);
-	socket.on('device:reconnected', deviceHandlers.onDeviceReconnected);
-	socket.on('device:disconnected', deviceHandlers.onDeviceDisconnected);
-	socket.on('device:battery:update', deviceHandlers.onBatteryUpdate);
+	socket.on(receivedEventServer.DEVICE_CONNECTED, deviceHandlers.onDeviceConnected);
+	socket.on(receivedEventServer.DEVICE_RECONNECTED, deviceHandlers.onDeviceReconnected);
+	socket.on(receivedEventServer.DEVICE_DISCONNECTED, deviceHandlers.onDeviceDisconnected);
+	socket.on(receivedEventServer.DEVICE_BATTERY_UPDATE, deviceHandlers.onBatteryUpdate);
 
 	// ============ REGISTRAR EVENTOS DE DATOS ============
 
-	socket.on('data:modified', dataHandlers.onDataModified);
+	socket.on(receivedEventServer.DATA_MODIFIED, dataHandlers.onDataModified);
 
 	return socket;
 };

@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import type { Socket } from 'socket.io-client';
 import type { DeviceStatusEvent } from '@/types/websocket';
 import type { Device } from '@/types'
+import { submittedEventServer } from '@/lib/constants'
 
 // ============ HANDLERS DE CONEXIÓN ============
 
@@ -11,7 +12,7 @@ export const createConnectionHandlers = (setIsConnected: (value: boolean) => voi
 		console.log('[WebSocket] ✅ Conectado al servidor');
 		setIsConnected(true);
 
-		socket.emit('IDENTIFY_CLIENT', { clientType: 'WEB' });
+		socket.emit(submittedEventServer.IDENTIFY_CLIENT, { clientType: 'WEB' });
 
 		toast.success('Conexión establecida', {
 			description: 'Recibiendo actualizaciones en tiempo real',
