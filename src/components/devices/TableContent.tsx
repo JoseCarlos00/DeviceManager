@@ -21,7 +21,7 @@ import  DataTable  from '@/components/devices/DataTable';
 import DataTableViewOptions from '@/components/devices/dataTableViewOptions';
 
 import { useDeviceWebSocket } from '@/hooks/useDeviceWebSocket';
-import { TableProvider } from '@/hooks/useTable';
+import { DeviceActionsProvider } from '@/contexts/DeviceActionsContext';
 
 export default function TableContent() {
 	'use no memo';
@@ -31,7 +31,7 @@ export default function TableContent() {
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [globalFilter, setGlobalFilter] = useState('');
 	const columns = useMemo<ColumnDef<Device>[]>(() => deviceColumns, []);
-	const { devices, isConnected, isRefreshing, refresh, emitEvent } = useDeviceWebSocket();
+	const { devices, isConnected, isRefreshing, refresh, sendMessage, sendPing } = useDeviceWebSocket();
 	const [messageRowId, setMessageRowId] = useState<string | null>(null);
 	const [messageText, setMessageText] = useState('');
 
@@ -51,15 +51,17 @@ export default function TableContent() {
 		getSortedRowModel: getSortedRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		state: tableState,
-		meta: {
-			emitEvent,
-			isConnected,
-			setMessageRowId,
-			setMessageText,
-			messageRowId,
-			messageText,
-		},
 	});
+
+	  const actionsValue = {
+    isConnected,
+    messageRowId,
+    messageText,
+    setMessageRowId,
+    setMessageText,
+    SEND_MESSAGE: sendMessage,
+    SEND_PING: sendPing,
+  };
 
 	// Estado de carga inicial
 	if (devices.length === 0 && isRefreshing) {
@@ -173,12 +175,12 @@ export default function TableContent() {
 			</CardHeader>
 
 			<CardContent className='grow flex'>
-				<TableProvider value={table}>
+				<DeviceActionsProvider value={actionsValue}>
 					<DataTable
 						columns={columns}
 						table={table}
-					/>
-				</TableProvider>
+						/>
+				</DeviceActionsProvider>
 			</CardContent>
 		</Card>
 	);

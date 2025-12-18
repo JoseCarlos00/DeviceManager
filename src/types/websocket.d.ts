@@ -40,7 +40,16 @@ export interface SendPingPayload {
 	target_device_id: string;
 }
 
-export interface EventSubmittedHandlers {
+
+export interface ClientToServerEvents {
 	[submittedEventServer.SEND_MESSAGE]: (payload: SendMessagePayload, callback: Callback) => void;
 	[submittedEventServer.SEND_PING]: (payload: SendPingPayload, callback: Callback) => void;
 }
+
+
+// // Eventos que recibimos
+// export interface ServerToClientEvents {
+//   [SocketEvent.DEVICE_CONNECTED]: (data: DeviceStatusEvent) => void;
+//   [SocketEvent.DEVICE_DISCONNECTED]: (data: DeviceStatusEvent) => void;
+//   [SocketEvent.DATA_MODIFIED]: (data: any) => void;
+// }

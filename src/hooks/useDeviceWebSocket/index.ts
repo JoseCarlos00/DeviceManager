@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { toast } from 'sonner';
 import type { Socket } from 'socket.io-client';
 import { apiClient } from '@/lib/api';
 import type { Device } from '@/types';
 import { setupSocket, cleanupSocket } from './socketSetup';
-import { useEventEmitters } from './eventEmitters';
+import { createSocketEmitters } from './socketEmitters';
 
 export function useDeviceWebSocket() {
 	const [devices, setDevices] = useState<Device[]>([]);
@@ -77,11 +77,9 @@ export function useDeviceWebSocket() {
 	}, [fetchDevices, updateDeviceInState, addOrUpdateDevice]);
 
 	// ============ EMISIÓN DE EVENTOS ============
-
-	const emitEvent = useEventEmitters(socketRef);
-
+	const emitters = useMemo(() => createSocketEmitters(socketRef), []);
+	
 	// ============ REFRESH MANUAL ============
-
 	const refresh = useCallback(() => {
 		fetchDevices();
 	}, [fetchDevices]);
@@ -91,6 +89,6 @@ export function useDeviceWebSocket() {
 		isConnected,
 		isRefreshing,
 		refresh,
-		emitEvent,
+		...emitters,
 	};
 }
