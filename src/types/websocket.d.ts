@@ -36,14 +36,14 @@ export interface SendMessagePayload {
 	};
 }
 
-export interface SendPingPayload {
+export interface SendDeviceIdPayload {
 	target_device_id: string;
 }
 
 
 export interface ClientToServerEvents {
 	[submittedEventServer.SEND_MESSAGE]: (payload: SendMessagePayload, callback: Callback) => void;
-	[submittedEventServer.SEND_PING]: (payload: SendPingPayload, callback: Callback) => void;
+	[submittedEventServer.SEND_PING]: (payload: SendDeviceIdPayload, callback: Callback) => void;
 }
 
 

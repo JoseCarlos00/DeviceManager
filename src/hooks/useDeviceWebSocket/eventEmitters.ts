@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import type { Socket } from 'socket.io-client';
 import { toast } from 'sonner';
 import { submittedEventServer } from '@/lib/constants';
-import type { ClientToServerEvents, SendMessagePayload, SendPingPayload, Callback, CallbackResponse } from '@/types';
+import type { ClientToServerEvents, SendMessagePayload, SendDeviceIdPayload, Callback, CallbackResponse } from '@/types';
 
 export function useEventEmitters(socketRef: React.RefObject<Socket | null>): ClientToServerEvents {
 	const sendMessage: ClientToServerEvents[typeof submittedEventServer.SEND_MESSAGE] = useCallback(
@@ -30,7 +30,7 @@ export function useEventEmitters(socketRef: React.RefObject<Socket | null>): Cli
 	);
 
 	const sendPing: ClientToServerEvents[typeof submittedEventServer.SEND_PING] = useCallback(
-		(payload: SendPingPayload, callback?: Callback) => {
+		(payload: SendDeviceIdPayload, callback?: Callback) => {
 			if (socketRef.current?.connected) {
 				socketRef.current
 					.timeout(5000)

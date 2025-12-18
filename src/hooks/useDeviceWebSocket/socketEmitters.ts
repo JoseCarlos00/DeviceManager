@@ -4,7 +4,7 @@ import { submittedEventServer as SocketEvent} from "@/lib/constants";
 import type {
 	ClientToServerEvents,
 	SendMessagePayload,
-	SendPingPayload,
+	SendDeviceIdPayload,
 	Callback,
 } from '@/types/websocket';
 
@@ -29,7 +29,7 @@ export const createSocketEmitters = (socketRef: React.RefObject<Socket | null>) 
     emit(SocketEvent.SEND_MESSAGE, payload, callback);
   };
 
-  const sendPing = (payload: SendPingPayload, callback: Callback) => {
+  const sendPing = (payload: SendDeviceIdPayload, callback: Callback) => {
     emit(SocketEvent.SEND_PING, payload, callback);
   };
 
