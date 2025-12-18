@@ -1,6 +1,6 @@
 import { useState, type HTMLAttributes } from 'react';
 import type { Row } from '@tanstack/react-table';
-import { MoreHorizontal, Bell, Pen } from 'lucide-react';
+import { MoreHorizontal, Bell, Pen, MessageSquareText, SmartphoneNfc } from 'lucide-react';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -9,8 +9,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import type { Device } from '@/types';
-import type { Callback } from '@/types';
+import type { Callback, CallbackResponse, Device } from '@/types';
 import { useDeviceActions } from '@/contexts/DeviceActionsContext';
 import {
 	AlertDialog,
@@ -27,6 +26,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useDeviceUIStore } from '@/stores/tableStore';
+import { useLogStore } from '@/stores/historyLogs';
 
 interface ActionsMenuProps<TValue> extends HTMLAttributes<HTMLDivElement> {
 	row: Row<TValue>;
@@ -35,19 +35,21 @@ interface ActionsMenuProps<TValue> extends HTMLAttributes<HTMLDivElement> {
 type AlarmUIState = 'idle' | 'sending' | 'active' | 'error';
 
 export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
-	const { isConnected, SEND_PING } = useDeviceActions();
+	const { isConnected, SEND_PING, ALARM_ACTIVATE } = useDeviceActions();
 	const setMessageRowId = useDeviceUIStore((state) => state.setMessageRowId);
 	const setAlarmSending = useDeviceUIStore((state) => state.setAlarmSending);
 	const setAlarmActive = useDeviceUIStore((state) => state.setAlarmActive);
 	const setAlarmError = useDeviceUIStore((state) => state.setAlarmError);
 	const clearAlarm = useDeviceUIStore((state) => state.clearAlarm);
 
+	const addLog = useLogStore((state) => state.addLog);
+
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [alarmDialogOpen, setAlarmDialogOpen] = useState(false);
 
 	const [alarmState, setAlarmState] = useState<AlarmUIState>('idle');
 	const [duration, setDuration] = useState<number>(10);
-	const [lastResponse, setLastResponse] = useState<Callback | null>(null);
+	const [lastResponse, setLastResponse] = useState<CallbackResponse | null>(null);
 
 	const currentUser = row.original as Device;
 	const deviceId = currentUser.androidId;
@@ -62,7 +64,11 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 		if (!currentUser.androidId) return;
 
 		const callback: Callback = (response) => {
-			console.log(`Respuesta del servidor para ${action}:`, response);
+			if (response?.status === 'OK') {
+				addLog(response.message, 'success');
+			} else {
+				addLog(response?.message ?? 'Error al ejecutar acción', 'error')
+			}
 		};
 
 		if (action === 'ping') {
@@ -89,30 +95,28 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 			deviceAlias: currentUser.equipo,
 		};
 
-		// alarmActivate(payload, (response) => {
-		// 	setLastResponse(response);
+		setAlarmSending(deviceId!, duration);
 
-		// 	if (response?.status === 'OK') {
-		// 		setAlarmState('active');
-		// 	} else {
-		// 		setAlarmState('error');
-		// 	}
-		// });
+		ALARM_ACTIVATE(payload, (response) => {
+			if (response?.status === 'OK') {
+				setAlarmActive(deviceId!);
+				setLastResponse(response);
+				setAlarmState('active');
+				addLog(response.message, 'success');
+			} else {
+				setAlarmError(deviceId!);
+				setLastResponse(response);
+				setAlarmState('error');
+			}
+		});
 
 		setTimeout(() => {
-			setAlarmState('active');
-			setAlarmActive(deviceId!);
-
-			setTimeout(() => {
-				setAlarmError(deviceId!);
-
-				setTimeout(() => {
-					clearAlarm(deviceId!);
-				}, 2000);
-			}, 1000);
-			
-		}, 3000);
+			clearAlarm(deviceId!);
+		}, duration * 1000);
 	};
+
+	console.log('lastResponse:', lastResponse);
+	
 
 	const handleCloseAlarmDialog = () => {
 		resetAlarmUI();
@@ -145,7 +149,10 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 					align='end'
 					hidden={!isConnected}
 				>
-					<DropdownMenuItem onClick={() => handleAction('ping')}>Ping</DropdownMenuItem>
+					<DropdownMenuItem onClick={() => handleAction('ping')}>
+						<SmartphoneNfc className='mr-2 h-4 w-4' />
+						Ping
+					</DropdownMenuItem>
 
 					<DropdownMenuSeparator />
 
@@ -162,7 +169,10 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 
 					<DropdownMenuSeparator />
 
-					<DropdownMenuItem onClick={() => handleAction('message')}>Mensaje</DropdownMenuItem>
+					<DropdownMenuItem onClick={() => handleAction('message')}>
+						<MessageSquareText className='mr-2 h-4 w-4' />
+						Mensaje
+						</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
 

@@ -3,6 +3,7 @@ import { AutoFocusInput } from '@/components/ui/AutoFocusInput';
 import type { Row } from '@tanstack/react-table';
 import type { Device } from '@/types';
 import { useDeviceUIStore } from '@/stores/tableStore';
+import { useLogStore } from "@/stores/historyLogs";
 
 interface AndroidIdCellProps {
   row: Row<Device>;
@@ -14,6 +15,7 @@ export function AndroidIdCell({ row }: AndroidIdCellProps) {
 	const messageText = useDeviceUIStore((state) => state.messageText);
   const setMessageRowId = useDeviceUIStore((state) => state.setMessageRowId);
   const setMessageText = useDeviceUIStore((state) => state.setMessageText);
+  const addLog = useLogStore((state) => state.addLog);
 
   const { SEND_MESSAGE } = useDeviceActions();
 
@@ -35,7 +37,11 @@ export function AndroidIdCell({ row }: AndroidIdCellProps) {
                 },
               },
               (response) => {
-                console.log('Respuesta del servidor para mensaje:', response);
+               if (response?.status === 'OK') {
+									addLog(response.message, 'success');
+								} else {
+									addLog(response?.message ?? 'Error al ejecutar acción', 'error');
+								}
               }
             );
             setMessageRowId(null);

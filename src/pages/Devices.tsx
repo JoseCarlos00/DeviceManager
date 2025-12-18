@@ -4,12 +4,13 @@ import { useDeviceWebSocket } from '@/hooks/useDeviceWebSocket'
 
 export default function Devices() {
 
-	const { isConnected, sendMessage, sendPing } = useDeviceWebSocket();
+	const { isConnected, sendMessage, sendPing, alarmActivate } = useDeviceWebSocket();
 
 		const actionsValue = {
 			isConnected,
 			SEND_MESSAGE: sendMessage,
 			SEND_PING: sendPing,
+			ALARM_ACTIVATE: alarmActivate,
 		};
 
 	return <DeviceActionsProvider value={actionsValue}>
