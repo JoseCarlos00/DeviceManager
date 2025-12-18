@@ -25,6 +25,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
+import { useDeviceUIStore } from '@/stores/tableStore';
 
 interface ActionsMenuProps<TValue> extends HTMLAttributes<HTMLDivElement> {
 	row: Row<TValue>;
@@ -33,7 +34,8 @@ interface ActionsMenuProps<TValue> extends HTMLAttributes<HTMLDivElement> {
 type AlarmUIState = 'idle' | 'sending' | 'active' | 'error';
 
 export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
-	const { isConnected, SEND_PING, setMessageRowId } = useDeviceActions();
+	const { isConnected, SEND_PING } = useDeviceActions();
+	const setMessageRowId = useDeviceUIStore((state) => state.setMessageRowId);
 
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [alarmDialogOpen, setAlarmDialogOpen] = useState(false);

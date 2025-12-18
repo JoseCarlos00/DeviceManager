@@ -2,13 +2,10 @@
 import { createContext, useContext } from 'react';
 import type { ClientToServerEvents } from '@/types/websocket';
 
-interface DeviceActionsContextValue extends ClientToServerEvents {
+type DeviceActionsContextValue = Pick<ClientToServerEvents, 'SEND_MESSAGE' | 'SEND_PING' | 'ALARM_ACTIVATE'> & {
 	isConnected: boolean;
-	messageRowId: string | null;
-	messageText: string;
-	setMessageRowId: (id: string | null) => void;
-	setMessageText: (text: string) => void;
-}
+};
+
 
 const DeviceActionsContext = createContext<DeviceActionsContextValue | null>(null);
 

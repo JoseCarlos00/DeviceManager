@@ -17,23 +17,21 @@ import { Search, WifiIcon, WifiOffIcon, RefreshCw } from 'lucide-react';
 
 import { type Device } from '@/types';
 import { columns as deviceColumns } from '@/components/devices/columns';
-import  DataTable  from '@/components/devices/DataTable';
+import DataTable from '@/components/devices/DataTable';
 import DataTableViewOptions from '@/components/devices/dataTableViewOptions';
 
 import { useDeviceWebSocket } from '@/hooks/useDeviceWebSocket';
-import { DeviceActionsProvider } from '@/contexts/DeviceActionsContext';
+
 
 export default function TableContent() {
 	'use no memo';
-	
+
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [globalFilter, setGlobalFilter] = useState('');
 	const columns = useMemo<ColumnDef<Device>[]>(() => deviceColumns, []);
-	const { devices, isConnected, isRefreshing, refresh, sendMessage, sendPing } = useDeviceWebSocket();
-	const [messageRowId, setMessageRowId] = useState<string | null>(null);
-	const [messageText, setMessageText] = useState('');
+	const { devices, isConnected, isRefreshing, refresh } = useDeviceWebSocket();
 
 	const tableState = useMemo(
 		() => ({ sorting, columnFilters, columnVisibility, globalFilter }),
@@ -52,16 +50,6 @@ export default function TableContent() {
 		getFilteredRowModel: getFilteredRowModel(),
 		state: tableState,
 	});
-
-	  const actionsValue = {
-    isConnected,
-    messageRowId,
-    messageText,
-    setMessageRowId,
-    setMessageText,
-    SEND_MESSAGE: sendMessage,
-    SEND_PING: sendPing,
-  };
 
 	// Estado de carga inicial
 	if (devices.length === 0 && isRefreshing) {
@@ -175,12 +163,10 @@ export default function TableContent() {
 			</CardHeader>
 
 			<CardContent className='grow flex'>
-				<DeviceActionsProvider value={actionsValue}>
 					<DataTable
 						columns={columns}
 						table={table}
-						/>
-				</DeviceActionsProvider>
+					/>
 			</CardContent>
 		</Card>
 	);

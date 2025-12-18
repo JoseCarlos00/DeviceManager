@@ -2,6 +2,7 @@ import { useDeviceActions } from '@/contexts/DeviceActionsContext';
 import { AutoFocusInput } from '@/components/ui/AutoFocusInput';
 import type { Row } from '@tanstack/react-table';
 import type { Device } from '@/types';
+import { useDeviceUIStore } from '@/stores/tableStore';
 
 interface AndroidIdCellProps {
   row: Row<Device>;
@@ -9,7 +10,12 @@ interface AndroidIdCellProps {
 
 export function AndroidIdCell({ row }: AndroidIdCellProps) {
   const androidId = row.getValue('androidId') as string | null;
-  const { messageRowId, messageText, setMessageText, setMessageRowId, SEND_MESSAGE } = useDeviceActions();
+  const messageRowId = useDeviceUIStore((state) => state.messageRowId);
+	const messageText = useDeviceUIStore((state) => state.messageText);
+  const setMessageRowId = useDeviceUIStore((state) => state.setMessageRowId);
+  const setMessageText = useDeviceUIStore((state) => state.setMessageText);
+
+  const { SEND_MESSAGE } = useDeviceActions();
 
   if (messageRowId === row.id) {
     return (
