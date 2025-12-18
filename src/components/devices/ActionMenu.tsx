@@ -21,10 +21,11 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-} from '../ui/alert-dialog';
+} from '@/components/ui/alert-dialog';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 import { useDeviceUIStore } from '@/stores/tableStore';
 
 interface ActionsMenuProps<TValue> extends HTMLAttributes<HTMLDivElement> {
@@ -36,6 +37,10 @@ type AlarmUIState = 'idle' | 'sending' | 'active' | 'error';
 export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 	const { isConnected, SEND_PING } = useDeviceActions();
 	const setMessageRowId = useDeviceUIStore((state) => state.setMessageRowId);
+	const setAlarmSending = useDeviceUIStore((state) => state.setAlarmSending);
+	const setAlarmActive = useDeviceUIStore((state) => state.setAlarmActive);
+	const setAlarmError = useDeviceUIStore((state) => state.setAlarmError);
+	const clearAlarm = useDeviceUIStore((state) => state.clearAlarm);
 
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [alarmDialogOpen, setAlarmDialogOpen] = useState(false);
@@ -45,6 +50,9 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 	const [lastResponse, setLastResponse] = useState<Callback | null>(null);
 
 	const currentUser = row.original as Device;
+	const deviceId = currentUser.androidId;
+
+	const alarm = useDeviceUIStore((state) => (deviceId ? state.alarms[deviceId] : undefined));
 
 	if (!currentUser.androidId || !currentUser.online) {
 		return <span className='inline-flex items-center justify-center size-8 opacity-50'></span>;
@@ -73,6 +81,7 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 		if (!currentUser.androidId) return;
 
 		setAlarmState('sending');
+		setAlarmSending(deviceId!, duration);
 
 		const payload = {
 			target_device_id: currentUser.androidId,
@@ -92,6 +101,16 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 
 		setTimeout(() => {
 			setAlarmState('active');
+			setAlarmActive(deviceId!);
+
+			setTimeout(() => {
+				setAlarmError(deviceId!);
+
+				setTimeout(() => {
+					clearAlarm(deviceId!);
+				}, 2000);
+			}, 1000);
+			
 		}, 3000);
 	};
 
@@ -106,7 +125,7 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 	};
 
 	return (
-		<>
+		<div className='flex flex-col items-center gap-1'>
 			<DropdownMenu
 				open={menuOpen}
 				onOpenChange={setMenuOpen}
@@ -146,6 +165,31 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 					<DropdownMenuItem onClick={() => handleAction('message')}>Mensaje</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
+
+			{alarm?.state === 'sending' && (
+				<Badge
+					variant='secondary'
+					className='text-xs'
+				>
+					Enviando alarma…
+				</Badge>
+			)}
+
+			{alarm?.state === 'active' && (
+				<Badge className='bg-red-600 text-xs'>
+					<Bell className='h-3 w-3 mr-1' />
+					Alarma activa
+				</Badge>
+			)}
+
+			{alarm?.state === 'error' && (
+				<Badge
+					variant='destructive'
+					className='text-xs'
+				>
+					Error
+				</Badge>
+			)}
 
 			<AlertDialog
 				open={alarmDialogOpen}
@@ -203,7 +247,6 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 					<AlertDialogFooter>
 						<AlertDialogCancel
 							onClick={handleCloseAlarmDialog}
-							disabled={alarmState === 'sending'}
 							className='cursor-pointer'
 						>
 							Cerrar
@@ -228,6 +271,6 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 					</AlertDialogFooter>
 				</AlertDialogContent>
 			</AlertDialog>
-		</>
+		</div>
 	);
 }
