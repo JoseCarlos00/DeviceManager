@@ -5,6 +5,9 @@ import { Menu } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useAuthStore } from '@/stores/authStore';
 
+import logo from '@/assets/icon_logo.png'
+
+
 interface AppHeaderProps {
 	onMenuClick?: () => void;
 }
@@ -20,19 +23,17 @@ export default function Header({ onMenuClick }: AppHeaderProps) {
 						<Menu className="h-6 w-6" />
 						<span className="sr-only">Abrir menú</span>
 					</Button>
-					{/* Sección Izquierda: Título y Saludo */}
+
 					<div>
-						<h1 className='text-2xl font-bold text-foreground'>Dashboard</h1>
-						<p className='mt-1 text-sm text-muted-foreground'>
+						<img src={logo} alt="Logo" className='h-11 w-auto rounded-[50%] inline-block mr-2.5'/>
+						<p className='mt-1 text-sm text-muted-foreground inline'>
 							Bienvenido de nuevo, {user?.username ?? 'invitado'} 👋
 						</p>
 					</div>
 
-					{/* Sección Derecha: Info de Usuario y Logout */}
 					{user && (
 						<div className='flex items-center gap-4'>
 							<div className='text-right hidden sm:block'>
-								<p className='font-semibold text-sm text-foreground'>{user.username}</p>
 								<RoleBadge role={user.role as UserRole} />
 							</div>
 							<LogoutButton />

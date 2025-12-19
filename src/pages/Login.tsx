@@ -12,16 +12,15 @@ export default function LoginPage() {
 
 	return (
 		<div className='min-h-screen flex items-center justify-center bg-background p-4'>
-			{/* Fondo con gradiente sutil */}
 			<div className='absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-size-[14px_24px]'></div>
 
 			<div className='w-full max-w-md px-4'>
-				<div className='mb-8 text-center'>
-					<h1 className='text-3xl font-bold text-foreground'>SentinelView</h1>
+				<div className='mb-8 text-center relative'>
+					<img src="icon_logo.png" className='size-20 mx-auto rounded-[50%]' alt="Logo" />
+					<h1 className='text-3xl font-bold text-foreground mb-2'>Devices Admin</h1>
 					<p className='text-muted-foreground mt-2'>Panel de Administración</p>
 				</div>
 
-				{/* Alerta de Éxito: Usando variante 'default' con colores de tema */}
 				{successMessage === 'logout_success' && (
 					<Alert className='mb-4 border-green-500/50 text-green-700 dark:text-green-400'>
 						<Terminal className='h-4 w-4 text-green-700 dark:text-green-400' />
@@ -30,7 +29,6 @@ export default function LoginPage() {
 					</Alert>
 				)}
 
-				{/* Muestra Alerta de Error: error=session_expired */}
 				{errorMessage === 'session_expired' && (
 					<Alert
 						variant='destructive'
