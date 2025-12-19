@@ -9,7 +9,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import type { Callback, CallbackResponse, Device } from '@/types';
+import type { Callback, Device } from '@/types';
 import { useDeviceActions } from '@/contexts/DeviceActionsContext';
 import {
 	AlertDialog,
@@ -26,7 +26,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useDeviceUIStore } from '@/stores/tableStore';
-import { useLogStore } from '@/stores/historyLogs';
+import { useResponseHandler } from '@/hooks/useResponseHandler'
 
 interface ActionsMenuProps<TValue> extends HTMLAttributes<HTMLDivElement> {
 	row: Row<TValue>;
@@ -42,14 +42,13 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 	const setAlarmError = useDeviceUIStore((state) => state.setAlarmError);
 	const clearAlarm = useDeviceUIStore((state) => state.clearAlarm);
 
-	const addLog = useLogStore((state) => state.addLog);
+	const { handleResponse } = useResponseHandler();
 
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [alarmDialogOpen, setAlarmDialogOpen] = useState(false);
 
 	const [alarmState, setAlarmState] = useState<AlarmUIState>('idle');
 	const [duration, setDuration] = useState<number>(10);
-	const [lastResponse, setLastResponse] = useState<CallbackResponse | null>(null);
 
 	const currentUser = row.original as Device;
 	const deviceId = currentUser.androidId;
@@ -64,11 +63,7 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 		if (!currentUser.androidId) return;
 
 		const callback: Callback = (response) => {
-			if (response?.status === 'OK') {
-				addLog(response.message, 'success');
-			} else {
-				addLog(response?.message ?? 'Error al ejecutar acción', 'error')
-			}
+			handleResponse(response)
 		};
 
 		if (action === 'ping') {
@@ -98,14 +93,16 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 		setAlarmSending(deviceId!, duration);
 
 		ALARM_ACTIVATE(payload, (response) => {
+			handleResponse(response, {
+				successMessage: `Alarma activada en ${currentUser.equipo}`,
+				icon: <Bell className='h-4 w-4' />,
+			});
+
 			if (response?.status === 'OK') {
 				setAlarmActive(deviceId!);
-				setLastResponse(response);
 				setAlarmState('active');
-				addLog(response.message, 'success');
 			} else {
 				setAlarmError(deviceId!);
-				setLastResponse(response);
 				setAlarmState('error');
 			}
 		});
@@ -115,8 +112,6 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 		}, duration * 1000);
 	};
 
-	console.log('lastResponse:', lastResponse);
-	
 
 	const handleCloseAlarmDialog = () => {
 		resetAlarmUI();
@@ -125,7 +120,6 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 
 	const resetAlarmUI = () => {
 		setAlarmState('idle');
-		setLastResponse(null);
 	};
 
 	return (

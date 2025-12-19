@@ -4,6 +4,7 @@ import  Login  from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import ProtectedLayout from './components/ProtectedLayout';
 import Devices from './pages/Devices'
+import { Toaster } from '@/components/ui/sonner'; 
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
       </Routes>
+      <Toaster />
     </ThemeProvider>
   )
 }
