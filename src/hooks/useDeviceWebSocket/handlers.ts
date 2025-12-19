@@ -131,7 +131,7 @@ export const createDeviceHandlers = (
 
 export const createDataHandlers = (fetchDevices: () => void) => {
 	const onDataModified = (res: unknown) => {
-		console.log('[WebSocket] 🔄 Datos modificados:', res);
+		toast.info('Datos modificados, actualizando lista de  dispositivos...')
 		fetchDevices();
 	};
 
