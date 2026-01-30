@@ -4,10 +4,10 @@ import { cn } from "@/lib/utils"
 
 const navItems = [
 	{ href: '/dashboard', label: 'Inicio', icon: Home },
-	{ href: '/dashboard/devices', label: 'Dispositivos', icon: FileSpreadsheet },
+	{ href: '/dashboard/administration', label: 'Administración', icon: FileSpreadsheet },
 	{ href: '/dashboard/users', label: 'Usuarios', icon: Users },
-	{ href: '/dashboard/settings', label: 'Configuración', icon: Settings },
-	{ href: '/dashboard/reports', label: 'Reportes', icon: BarChart3 },
+	// { href: '/dashboard/settings', label: 'Configuración', icon: Settings },
+	// { href: '/dashboard/reports', label: 'Reportes', icon: BarChart3 },
 ];
 
 interface SidebarProps {	
