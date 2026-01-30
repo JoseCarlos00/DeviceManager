@@ -1,9 +1,10 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from '@/components/theme-provider'
+import { Toaster } from '@/components/ui/sonner'; 
 import  Login  from './pages/Login'
 import ProtectedLayout from './components/ProtectedLayout';
 import Devices from './pages/Devices'
-import { Toaster } from '@/components/ui/sonner'; 
+import Administration from './pages/Administration'
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
 
         <Route element={<ProtectedLayout />}>
           <Route path="/dashboard" element={<Devices />} />
-          <Route path="/dashboard/devices" element={<Devices />} />
+          <Route path="/dashboard/administration" element={<Administration />} />
         </Route>
         
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
