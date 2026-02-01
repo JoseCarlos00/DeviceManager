@@ -41,12 +41,12 @@ export default function Administration() {
 
 			{/* Cards de acciones */}
 			<div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
-				{/* <BroadcastMessageCard connectedDevices={connectedDevices} /> */}
-				{/* <MaintenanceModeCard totalDevices={totalDevices} /> */}
-				{/* <UpdateNotificationCard
+				<BroadcastMessageCard connectedDevices={connectedDevices} />
+				<MaintenanceModeCard totalDevices={totalDevices} />
+				<UpdateNotificationCard
 					connectedDevices={connectedDevices}
 					totalDevices={totalDevices}
-				/> */}
+				/>
 			</div>
 
 			{/* Historial */}
