@@ -142,14 +142,14 @@ export default function BroadcastMessageCard({ connectedDevices }: BroadcastMess
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
-						<AlertDialogCancel disabled={isSending}>Cancelar</AlertDialogCancel>
+						<AlertDialogCancel disabled={isSending} className='cursor-pointer'>Cancelar</AlertDialogCancel>
 						<AlertDialogAction
 							onClick={(e) => {
 								e.preventDefault();
 								handleSendMessage();
 							}}
 							disabled={isSending}
-							className='bg-destructive hover:bg-destructive/90'
+							className='bg-destructive hover:bg-destructive/90 cursor-pointer'
 						>
 							{isSending ? 'Enviando...' : 'Enviar a todos'}
 						</AlertDialogAction>
