@@ -3,7 +3,7 @@ import { Home, Users, Settings, BarChart3, PanelLeftClose, FileSpreadsheet } fro
 import { cn } from "@/lib/utils"
 
 const navItems = [
-	{ href: '/dashboard', label: 'Inicio', icon: Home },
+	{ href: '/dashboard', label: 'Dispositivos', icon: Home },
 	{ href: '/dashboard/administration', label: 'Administración', icon: FileSpreadsheet },
 	{ href: '/dashboard/users', label: 'Usuarios', icon: Users },
 	// { href: '/dashboard/settings', label: 'Configuración', icon: Settings },
