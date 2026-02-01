@@ -16,7 +16,7 @@ import {
 	AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { MessageSquare, Send } from 'lucide-react';
-import { useDeviceAdminActions } from '@/contexts/DeviceActionsAdminContext';
+import { useDeviceActions } from '@/contexts/DeviceActionsContext';
 import { useResponseHandler } from '@/hooks/useResponseHandler';
 import { useAdminActionsStore } from '@/stores/adminActionsStore';
 import { useAuthStore } from '@/stores/authStore';
@@ -31,7 +31,7 @@ export default function BroadcastMessageCard({ connectedDevices }: BroadcastMess
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [isSending, setIsSending] = useState(false);
 
-	const { SEND_BROADCAST_MESSAGE } = useDeviceAdminActions();
+	const { SEND_BROADCAST_MESSAGE } = useDeviceActions();
 	const { handleResponse } = useResponseHandler();
 	const addAction = useAdminActionsStore((state) => state.addAction);
 	const user = useAuthStore((state) => state.user);
@@ -117,7 +117,7 @@ export default function BroadcastMessageCard({ connectedDevices }: BroadcastMess
 					<Button
 						onClick={() => setDialogOpen(true)}
 						disabled={!message.trim() || connectedDevices === 0}
-						className='w-full'
+						className='w-full cursor-pointer'
 					>
 						<Send className='h-4 w-4 mr-2' />
 						Enviar a todos ({connectedDevices} dispositivos)

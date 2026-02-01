@@ -1,0 +1,173 @@
+// components/administration/MaintenanceModeCard.tsx
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Wrench, Calendar } from 'lucide-react';
+import { useDeviceActions } from '@/contexts/DeviceActionsContext';
+import { useResponseHandler } from '@/hooks/useResponseHandler';
+import { useAdminActionsStore } from '@/stores/adminActionsStore';
+import { useAuthStore } from '@/stores/authStore';
+
+interface MaintenanceModeCardProps {
+	totalDevices: number;
+}
+
+export default function MaintenanceModeCard({ totalDevices }: MaintenanceModeCardProps) {
+	const [dialogOpen, setDialogOpen] = useState(false);
+	const [isSending, setIsSending] = useState(false);
+	const [durationHours, setDurationHours] = useState<number>(2);
+	const [untilDate, setUntilDate] = useState<Date>(() => new Date(Date.now() + durationHours * 60 * 60 * 1000));
+
+	const { SET_MAINTENANCE_MODE: SET_BROADCAST_MAINTENANCE_MODE} = useDeviceActions();
+	const { handleResponse } = useResponseHandler();
+	const addAction = useAdminActionsStore((state) => state.addAction);
+	const user = useAuthStore((state) => state.user);
+
+	useEffect(() => {
+		setUntilDate(new Date(Date.now() + durationHours * 60 * 60 * 1000));
+	}, [durationHours]);
+
+	const handleActivateMaintenance = () => {
+		setIsSending(true);
+
+		const untilTimestampMs = Date.now() + durationHours * 60 * 60 * 1000;
+		const untilDateReadable = new Date(untilTimestampMs).toLocaleString();
+
+		const payload = {
+			untilTimestampMs,
+			untilDateReadable,
+		};
+
+		SET_BROADCAST_MAINTENANCE_MODE(payload, (response) => {
+			handleResponse(response, {
+				successMessage: `Modo mantenimiento activado hasta ${untilDateReadable}`,
+				icon: <Wrench className='h-4 w-4' />,
+			});
+
+			if (response?.status === 'OK') {
+				addAction({
+					action: 'maintenance_mode',
+					executedBy: user?.username || 'Unknown',
+					devicesAffected: totalDevices,
+					totalDevices,
+					status: 'success',
+					details: {
+						maintenanceUntil: untilTimestampMs,
+						maintenanceUntilReadable: untilDateReadable,
+						serverResponse: response,
+					},
+				});
+
+				setDialogOpen(false);
+			}
+
+			setIsSending(false);
+		});
+	};
+
+	return (
+		<>
+			<Card>
+				<CardHeader>
+					<CardTitle className='flex items-center gap-2'>
+						<Wrench className='h-5 w-5' />
+						Modo Mantenimiento
+					</CardTitle>
+					<CardDescription>Activa el modo mantenimiento en todos los dispositivos</CardDescription>
+				</CardHeader>
+				<CardContent className='space-y-4'>
+					<div className='space-y-2'>
+						<Label htmlFor='duration'>Duración (horas)</Label>
+						<Input
+							id='duration'
+							type='number'
+							min={1}
+							max={72}
+							value={durationHours}
+							onChange={(e) => setDurationHours(Number(e.target.value))}
+						/>
+						<p className='text-xs text-muted-foreground'>Rango: 1 a 72 horas</p>
+					</div>
+
+					<div className='p-3 bg-muted rounded-md space-y-1'>
+						<div className='flex items-center gap-2 text-sm'>
+							<Calendar className='h-4 w-4' />
+							<span className='font-medium'>El mantenimiento terminará:</span>
+						</div>
+						<p className='text-sm text-muted-foreground'>{untilDate.toLocaleString()}</p>
+						<Badge
+							variant='outline'
+							className='mt-2'
+						>
+							En {durationHours} {durationHours === 1 ? 'hora' : 'horas'}
+						</Badge>
+					</div>
+
+					<Button
+						onClick={() => setDialogOpen(true)}
+						disabled={totalDevices === 0}
+						variant='destructive'
+						className='w-full cursor-pointer'
+					>
+						<Wrench className='h-4 w-4 mr-2' />
+						Activar Modo Mantenimiento
+					</Button>
+
+					<p className='text-xs text-muted-foreground'>
+						ℹ️ Los dispositivos recibirán una notificación y entrarán en modo restringido.
+					</p>
+				</CardContent>
+			</Card>
+
+			<AlertDialog
+				open={dialogOpen}
+				onOpenChange={setDialogOpen}
+			>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>⚠️ ¿Activar modo mantenimiento en {totalDevices} dispositivos?</AlertDialogTitle>
+						<AlertDialogDescription>
+							Los dispositivos entrarán en modo mantenimiento y algunas funciones estarán restringidas.
+							<div className='mt-4 p-3 bg-muted rounded-md space-y-2'>
+								<p className='text-sm font-medium'>Detalles:</p>
+								<ul className='text-sm space-y-1'>
+									<li>
+										• Duración: {durationHours} {durationHours === 1 ? 'hora' : 'horas'}
+									</li>
+									<li>• Finalizará: {untilDate.toLocaleString()}</li>
+									<li>• Dispositivos afectados: {totalDevices}</li>
+								</ul>
+							</div>
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel disabled={isSending} className='cursor-pointer'>Cancelar</AlertDialogCancel>
+						<AlertDialogAction
+							onClick={(e) => {
+								e.preventDefault();
+								handleActivateMaintenance();
+							}}
+							disabled={isSending}
+							className='bg-destructive hover:bg-destructive/90 cursor-pointer'
+						>
+							{isSending ? 'Activando...' : 'Activar Mantenimiento'}
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
+		</>
+	);
+}
