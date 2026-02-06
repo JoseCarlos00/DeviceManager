@@ -25,8 +25,6 @@ import TerminalResponses from './TerminalResponse'
 import StatusConnection from '../StatusConnection'
 
 export default function TableContent() {
-	('use no memo');
-
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
