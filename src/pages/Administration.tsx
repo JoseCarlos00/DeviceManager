@@ -10,8 +10,6 @@ export default function Administration() {
 
 	const connectedDevices = devices.filter((d) => d.online).length;
 	const totalDevices = devices.length;
-	const maintenanceDevices = 0; // TODO: Implementar lógica de mantenimiento
-
 
 	return (
 		<div className='space-y-6 pt-2'>
@@ -19,7 +17,6 @@ export default function Administration() {
 			<StatusConnection
 				connectedDevices={connectedDevices}
 				totalDevices={totalDevices}
-				maintenanceDevices={maintenanceDevices}
 			/>
 
 			{/* Cards de acciones */}

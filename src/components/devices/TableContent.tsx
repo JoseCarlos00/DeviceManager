@@ -34,7 +34,6 @@ export default function TableContent() {
 
 	const connectedDevices = devices.filter((d) => d.online).length;
 	const totalDevices = devices.length;
-	const maintenanceDevices = 0; // TODO: Implementar lógica de mantenimiento
 
 	const tableState = useMemo(
 		() => ({ sorting, columnFilters, columnVisibility, globalFilter }),
@@ -88,7 +87,7 @@ export default function TableContent() {
 
 	return (
 		<div className='space-y-6 h-full pt-2'>
-			<StatusConnection connectedDevices={connectedDevices} totalDevices={totalDevices} maintenanceDevices={maintenanceDevices}/>
+			<StatusConnection connectedDevices={connectedDevices} totalDevices={totalDevices} />
 
 			<Card className='flex flex-col h-full'>
 				<CardHeader>
