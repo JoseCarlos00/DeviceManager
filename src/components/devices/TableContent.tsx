@@ -20,7 +20,7 @@ import { columns as deviceColumns } from '@/components/devices/columns';
 import DataTable from '@/components/devices/DataTable';
 import DataTableViewOptions from '@/components/devices/dataTableViewOptions';
 
-import { useDeviceWebSocket } from '@/hooks/useDeviceWebSocket';
+import { useDeviceActions } from '@/contexts/DeviceActionsContext';
 import TerminalResponses from './TerminalResponse'
 
 export default function TableContent() {
@@ -31,7 +31,7 @@ export default function TableContent() {
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [globalFilter, setGlobalFilter] = useState('');
 	const columns = useMemo<ColumnDef<Device>[]>(() => deviceColumns, []);
-	const { devices, isRefreshing, refresh } = useDeviceWebSocket();
+	const { devices, isRefreshing, refresh } = useDeviceActions();
 
 	
 	const tableState = useMemo(
