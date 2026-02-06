@@ -30,6 +30,11 @@ export const createConnectionHandlers = (setIsConnected: (value: boolean) => voi
 			socket.connect();
 		}
 
+		// Ignorar desconexiones iniciadas por el cliente (navegación/desmontaje)
+		if (reason === 'io client disconnect') {
+			return;
+		}
+
 		toast.warning('Conexión perdida', {
 			description: 'Intentando reconectar...',
 		});

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'; 
 import  Login  from './pages/Login'
@@ -8,10 +8,16 @@ import Devices from './pages/Devices'
 import Administration from './pages/Administration'
 import { useDeviceWebSocket } from '@/hooks/useDeviceWebSocket';
 import { DeviceActionsProvider } from './contexts/DeviceActionsContext'
+import { useAuthStore } from '@/stores/authStore';
 
-// Layout unificado para inicializar el socket y el provider una sola vez
-function DeviceActionsLayout() {
+function App() {
+  const { isAuthenticated } = useAuthStore();
+  
+  // El socket vive aquí, en el nivel superior. Solo se conecta si hay autenticación.
   const {
+    devices,
+    isRefreshing,
+    refresh,
     isConnected,
     sendMessage,
     sendPing,
@@ -19,10 +25,13 @@ function DeviceActionsLayout() {
     sendBroadcastMessage,
     setBroadcastMaintenanceMode,
     checkForUpdateBroadcast
-  } = useDeviceWebSocket();
+  } = useDeviceWebSocket(isAuthenticated);
 
   const value = useMemo(
     () => ({
+      devices,
+      isRefreshing,
+      refresh,
       isConnected,
       SEND_MESSAGE: sendMessage,
       SEND_PING: sendPing,
@@ -31,31 +40,24 @@ function DeviceActionsLayout() {
       SET_MAINTENANCE_MODE: setBroadcastMaintenanceMode,
       CHECK_FOR_UPDATE_BROADCAST: checkForUpdateBroadcast,
     }),
-    [isConnected, sendMessage, sendPing, alarmActivate, sendBroadcastMessage, setBroadcastMaintenanceMode, checkForUpdateBroadcast],
+    [devices, isRefreshing, refresh, isConnected, sendMessage, sendPing, alarmActivate, sendBroadcastMessage, setBroadcastMaintenanceMode, checkForUpdateBroadcast],
   );
 
-  return (
-    <DeviceActionsProvider value={value}>
-      <Outlet />
-    </DeviceActionsProvider>
-  );
-}
-
-function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <Routes>
-        <Route path="/login" element={<Login />} />
+      <DeviceActionsProvider value={value}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
 
-        <Route element={<ProtectedLayout />}>
-          <Route element={<DeviceActionsLayout />}>
+          <Route element={<ProtectedLayout />}>
+            {/* Ya no necesitamos el layout intermedio DeviceActionsLayout */}
             <Route path="/dashboard" element={<Devices />} />
             <Route path="/dashboard/administration" element={<Administration />} />
           </Route>
-        </Route>
-        
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-      </Routes>
+          
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </DeviceActionsProvider>
       <Toaster />
     </ThemeProvider>
   )

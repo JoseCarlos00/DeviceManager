@@ -6,7 +6,7 @@ import type { Device } from '@/types';
 import { setupSocket, cleanupSocket } from './socketSetup';
 import { createSocketEmitters } from './socketEmitters';
 
-export function useDeviceWebSocket() {
+export function useDeviceWebSocket(enabled: boolean = true) {
 	const [devices, setDevices] = useState<Device[]>([]);
 	const [isConnected, setIsConnected] = useState(false);
 	const [isRefreshing, setIsRefreshing] = useState(true);
@@ -54,6 +54,8 @@ export function useDeviceWebSocket() {
 	// ============ CONFIGURACIÓN WEBSOCKET ============
 
 	useEffect(() => {
+		if (!enabled) return;
+
 		// Fetch inicial
 		fetchDevices();
 
@@ -74,7 +76,7 @@ export function useDeviceWebSocket() {
 		return () => {
 			cleanupSocket(socketInstance, timeoutId);
 		};
-	}, [fetchDevices, updateDeviceInState, addOrUpdateDevice]);
+	}, [enabled, fetchDevices, updateDeviceInState, addOrUpdateDevice]);
 
 	// ============ EMISIÓN DE EVENTOS ============
 	const emitters = useMemo(() => createSocketEmitters(socketRef), []);

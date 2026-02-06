@@ -1,6 +1,6 @@
 // pages/Administration.tsx
 import { Shield } from 'lucide-react';
-import { useDeviceWebSocket } from '@/hooks/useDeviceWebSocket';
+import { useDeviceActions } from '@/contexts/DeviceActionsContext';
 import { useAdminActionsStore } from '@/stores/adminActionsStore';
 import AdminStatsCard from '@/components/administration/AdminStatsCard';
 import BroadcastMessageCard from '@/components/administration/BroadcastMessageCard';
@@ -9,7 +9,7 @@ import UpdateNotificationCard from '@/components/administration/UpdateNotificati
 import AdminActionsTable from '@/components/administration/AdminActionsTable';
 
 export default function Administration() {
-	const { devices } = useDeviceWebSocket();
+	const { devices } = useDeviceActions();
 	const actions = useAdminActionsStore((state) => state.actions);
 
 	const connectedDevices = devices.filter((d) => d.online).length;
