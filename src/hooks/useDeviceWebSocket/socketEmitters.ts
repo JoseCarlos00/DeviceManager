@@ -13,7 +13,7 @@ import type {
 export const createSocketEmitters = (socketRef: React.RefObject<Socket | null>) => {
 	const emit = <E extends keyof ClientToServerEvents>(event: E, ...args: Parameters<ClientToServerEvents[E]>) => {
 		if (socketRef.current?.connected) {
-			socketRef.current.emit(event, ...args);
+			socketRef.current.timeout(15000).emit(event, ...args);
 		} else {
 			console.warn(`[WebSocket] No conectado, no se puede emitir: ${event}`);
 
