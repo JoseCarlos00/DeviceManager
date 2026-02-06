@@ -126,3 +126,9 @@ body, html, .scroller  {
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    @apply cursor-pointer;
+  }
+}
