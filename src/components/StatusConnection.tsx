@@ -1,21 +1,16 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Activity, Wifi, Wrench } from 'lucide-react';
-import ConnectionIndicator from './ConnectionIndicator'
+import { Activity, Wifi } from 'lucide-react';
+import ConnectionIndicator from './ConnectionIndicator';
+import { MaintenanceStatus } from './MaintenanceStatus'
 
 interface StatusConnectionProps {
 	connectedDevices: number;
 	totalDevices: number;
-	maintenanceDevices: number;
 }
 
- export default function StatusConnection({
-	connectedDevices,
-	totalDevices,
-	maintenanceDevices,
-}: StatusConnectionProps) {
+export default function StatusConnection({ connectedDevices, totalDevices }: StatusConnectionProps) {
 	return (
 		<Card className='relative'>
-
 			<div className='absolute top-1 left-2 flex items-center gap-2'>
 				<Activity className='h-4 w-4' />
 				<ConnectionIndicator />
@@ -34,13 +29,7 @@ interface StatusConnectionProps {
 						</p>
 					</div>
 
-					<div className='space-y-1'>
-						<div className='flex items-center gap-2 text-muted-foreground text-sm'>
-							<Wrench className='h-4 w-4' />
-							En mantenimiento
-						</div>
-						<p className='text-2xl font-bold'>{maintenanceDevices}</p>
-					</div>
+					<MaintenanceStatus />
 				</div>
 			</CardContent>
 		</Card>

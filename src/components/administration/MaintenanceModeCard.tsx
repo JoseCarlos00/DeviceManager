@@ -19,7 +19,7 @@ import { useDeviceActions } from '@/contexts/DeviceActionsContext';
 import { useResponseHandler } from '@/hooks/useResponseHandler';
 import { useAdminActionsStore } from '@/stores/adminActionsStore';
 import { useAuthStore } from '@/stores/authStore';
-import { useMaintenanceModeStore } from '@/stores/maintenanceModeStore';
+import { useMaintenanceModeStore } from '@/stores/useMaintenanceModeStore';
 
 interface MaintenanceModeCardProps {
 	totalDevices: number;
@@ -76,7 +76,7 @@ export default function MaintenanceModeCard({ totalDevices }: MaintenanceModeCar
 		};
 
 		setMaintenanceMode(payload);
-		
+
 		SET_BROADCAST_MAINTENANCE_MODE(payload, (response) => {
 			handleResponse(response, {
 				successMessage: `Modo mantenimiento activado hasta ${untilDateReadable}`,
@@ -124,7 +124,7 @@ export default function MaintenanceModeCard({ totalDevices }: MaintenanceModeCar
 								type='button'
 								variant={selectionMode === 'duration' ? 'default' : 'outline'}
 								onClick={() => setSelectionMode('duration')}
-								className='flex-1'
+								className='flex-1 cursor-pointer'
 							>
 								<Clock className='h-4 w-4 mr-2' />
 							</Button>
@@ -132,7 +132,7 @@ export default function MaintenanceModeCard({ totalDevices }: MaintenanceModeCar
 								type='button'
 								variant={selectionMode === 'datetime' ? 'default' : 'outline'}
 								onClick={() => setSelectionMode('datetime')}
-								className='flex-1'
+								className='flex-1 cursor-pointer'
 							>
 								<Calendar className='h-4 w-4 mr-2' />
 								Fecha/Hora
@@ -166,12 +166,9 @@ export default function MaintenanceModeCard({ totalDevices }: MaintenanceModeCar
 								value={selectedDate}
 								onChange={(e) => setSelectedDate(e.target.value)}
 								min={new Date().toISOString().slice(0, 16)}
+								className='cursor-pointer'
 							/>
-							{!isValidDateTime && (
-								<p className='text-xs text-destructive'>
-									⚠️ La fecha debe ser futura
-								</p>
-							)}
+							{!isValidDateTime && <p className='text-xs text-destructive'>⚠️ La fecha debe ser futura</p>}
 						</div>
 					)}
 
@@ -182,11 +179,13 @@ export default function MaintenanceModeCard({ totalDevices }: MaintenanceModeCar
 							<span className='font-medium'>El mantenimiento terminará:</span>
 						</div>
 						<p className='text-sm text-muted-foreground'>{untilDate.toLocaleString()}</p>
-						<Badge variant='outline' className='mt-2'>
-							{selectionMode === 'duration' 
+						<Badge
+							variant='outline'
+							className='mt-2'
+						>
+							{selectionMode === 'duration'
 								? `En ${durationHours} ${durationHours === 1 ? 'hora' : 'horas'}`
-								: `Hasta ${untilDate.toLocaleDateString()} a las ${untilDate.toLocaleTimeString()}`
-							}
+								: `Hasta ${untilDate.toLocaleDateString()} a las ${untilDate.toLocaleTimeString()}`}
 						</Badge>
 					</div>
 
@@ -206,12 +205,13 @@ export default function MaintenanceModeCard({ totalDevices }: MaintenanceModeCar
 				</CardContent>
 			</Card>
 
-			<AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+			<AlertDialog
+				open={dialogOpen}
+				onOpenChange={setDialogOpen}
+			>
 				<AlertDialogContent>
 					<AlertDialogHeader>
-						<AlertDialogTitle>
-							⚠️ ¿Activar modo mantenimiento en {totalDevices} dispositivos?
-						</AlertDialogTitle>
+						<AlertDialogTitle>⚠️ ¿Activar modo mantenimiento en {totalDevices} dispositivos?</AlertDialogTitle>
 						<AlertDialogDescription>
 							Los dispositivos entrarán en modo mantenimiento y algunas funciones estarán restringidas.
 							<div className='mt-4 p-3 bg-muted rounded-md space-y-2'>
@@ -229,7 +229,10 @@ export default function MaintenanceModeCard({ totalDevices }: MaintenanceModeCar
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
-						<AlertDialogCancel disabled={isSending} className='cursor-pointer'>
+						<AlertDialogCancel
+							disabled={isSending}
+							className='cursor-pointer'
+						>
 							Cancelar
 						</AlertDialogCancel>
 						<AlertDialogAction
