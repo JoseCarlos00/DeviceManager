@@ -106,6 +106,7 @@ export default function AdminActionsTable() {
 													variant='ghost'
 													size='sm'
 													onClick={() => handleViewDetails(action)}
+													className='cursor-pointer'
 												>
 													<Eye className='h-4 w-4' />
 												</Button>

@@ -31,7 +31,7 @@ export default function TableContent() {
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [globalFilter, setGlobalFilter] = useState('');
 	const columns = useMemo<ColumnDef<Device>[]>(() => deviceColumns, []);
-	const { devices, isConnected, isRefreshing, refresh } = useDeviceWebSocket();
+	const { devices, isRefreshing, refresh } = useDeviceWebSocket();
 
 	
 	const tableState = useMemo(
@@ -92,11 +92,6 @@ export default function TableContent() {
 
 					{/* Indicador de conexión y botón refresh */}
 					<div className='flex items-center gap-2'>
-						<div className='flex items-center gap-2 text-sm'>
-							<div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
-							<span className='text-muted-foreground'>{isConnected ? 'Conectado' : 'Desconectado'}</span>
-						</div>
-
 						<Button
 							variant='outline'
 							size='sm'

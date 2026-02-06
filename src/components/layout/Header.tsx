@@ -6,6 +6,8 @@ import { Button } from '../ui/button';
 import { useAuthStore } from '@/stores/authStore';
 
 import logo from '@/assets/icon_logo.png'
+import { useDeviceActions } from '@/contexts/DeviceActionsContext'
+import ConnectionIndicator from '../ConnectionIndicator'
 
 
 interface AppHeaderProps {
@@ -14,6 +16,7 @@ interface AppHeaderProps {
 
 export default function Header({ onMenuClick }: AppHeaderProps) {
 	const { user } = useAuthStore();
+	const { isConnected } = useDeviceActions();
 
 	return (
 		<header className='bg-card border-b border-border'>
@@ -29,6 +32,7 @@ export default function Header({ onMenuClick }: AppHeaderProps) {
 						<p className='mt-1 text-sm text-muted-foreground inline'>
 							Bienvenido de nuevo, {user?.username ?? 'invitado'} 👋
 						</p>
+						<ConnectionIndicator isConnected={isConnected} />
 					</div>
 
 					{user && (
