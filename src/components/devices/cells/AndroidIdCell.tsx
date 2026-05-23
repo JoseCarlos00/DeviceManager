@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useDeviceActions } from '@/contexts/DeviceActionsContext';
 import { AutoFocusInput } from '@/components/ui/AutoFocusInput';
 import type { Row } from '@tanstack/react-table';
@@ -10,13 +11,15 @@ interface AndroidIdCellProps {
 }
 
 export function AndroidIdCell({ row }: AndroidIdCellProps) {
-  const androidId = row.getValue('androidId') as string | null;
+  const [isSending, setIsSending] = useState(false);
+  const device = row.original;
+  const androidId = device.androidId;
   const messageRowId = useDeviceUIStore((state) => state.messageRowId);
 	const messageText = useDeviceUIStore((state) => state.messageText);
   const setMessageRowId = useDeviceUIStore((state) => state.setMessageRowId);
   const setMessageText = useDeviceUIStore((state) => state.setMessageText);
 
-  const { SEND_MESSAGE } = useDeviceActions();
+  const { SEND_MESSAGE, isConnected } = useDeviceActions();
   const { handleResponse } = useResponseHandler();
 
   if (messageRowId === row.id) {
@@ -26,28 +29,36 @@ export function AndroidIdCell({ row }: AndroidIdCellProps) {
         value={messageText}
         onChange={(e) => setMessageText(e.target.value)}
         placeholder='Escribe el mensaje'
+        disabled={!isConnected}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
+            e.preventDefault();
+            if (!messageText.trim() || !androidId) return;
+
+            setIsSending(true);
             SEND_MESSAGE(
               {
-                target_device_id: androidId!,
+                target_device_id: androidId,
                 dataMessage: {
                   message: messageText,
                   sender: 'Admin',
                 },
               },
               (response) => {
+                setIsSending(false);
                 handleResponse(response);
+                
+                // Cerramos el input solo cuando recibimos respuesta
+                setMessageRowId(null);
+                setMessageText('');
               }
             );
-            setMessageRowId(null);
-            setMessageText('');
-          }
-          if (e.key === 'Escape') {
+          } else if (e.key === 'Escape') {
             setMessageRowId(null);
             setMessageText('');
           }
         }}
+        disabled={!isConnected || isSending}
       />
     );
   }

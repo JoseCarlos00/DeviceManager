@@ -28,14 +28,6 @@ export interface CallbackResponse {
 
 export type Callback = (response: CallbackResponse | null) => void;
 
-export interface SendMessagePayload {
-	target_device_id: string; // ID del dispositivo Android
-	dataMessage: {
-		message: string;
-		sender?: string; // default "Nuevo Mensaje"
-	};
-}
-
 export interface SendDeviceIdPayload {
 	target_device_id: string;
 }
@@ -47,6 +39,11 @@ export interface IdentifyClientPayload {
 export interface AlarmPayload {
 	durationSeconds?: number; // default 10
 	deviceAlias?: string; // default "desconocido"
+}
+
+export interface MessagePayload {
+	message: string;
+	sender?: string;
 }
 
 export type AlarmActivationPayload = SendDeviceIdPayload & AlarmPayload;
