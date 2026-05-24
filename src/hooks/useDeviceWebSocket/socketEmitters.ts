@@ -8,18 +8,34 @@ import type {
 	MaintenanceModePayload,
 	SendAllMessagePayload,
 	AlarmActivationPayload,
+	CallbackResponse,
 } from '@/types/websocket';
 
 export const createSocketEmitters = (socketRef: React.RefObject<Socket | null>) => {
 	const emit = <E extends keyof ClientToServerEvents>(event: E, ...args: Parameters<ClientToServerEvents[E]>) => {
 		if (socketRef.current?.connected) {
-			socketRef.current.timeout(15000).emit(event, ...args);
+			const originalArgs = [...args] as unknown[];
+			const lastIndex = originalArgs.length - 1;
+			const originalCallback = originalArgs[lastIndex];
+
+			if (typeof originalCallback === 'function') {
+				originalArgs[lastIndex] = (err: Error | null, response: CallbackResponse | null) => {
+					if (err) {
+						console.warn(`[WebSocket] Timeout en evento: ${event}`, err);
+						(originalCallback as Callback)(null);
+					} else {
+						(originalCallback as Callback)(response);
+					}
+				};
+			}
+
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			(socketRef.current.timeout(15000) as any).emit(event, ...originalArgs);
 		} else {
 			console.warn(`[WebSocket] No conectado, no se puede emitir: ${event}`);
-
 			const callback = args[args.length - 1];
 			if (typeof callback === 'function') {
-				callback(null);
+				(callback as Callback)(null);
 			}
 		}
 	};
