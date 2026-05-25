@@ -109,7 +109,7 @@ export default function TableContent() {
 			<Card className='flex flex-col h-full'>
 				<CardHeader>
 					<div className='flex items-center justify-between'>
-						<CardDescription>Gestión y monitoreo de dispositivos en red</CardDescription>
+						<CardDescription>Gestión y monitoreo de dispositivos</CardDescription>
 
 						{/* Indicador de conexión y botón refresh */}
 						<div className='flex items-center gap-2'>
