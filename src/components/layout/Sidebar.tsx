@@ -9,7 +9,7 @@ const navItems = [
 	{ href: '/dashboard', label: 'Dispositivos', icon: Home },
 	{ href: '/dashboard/administration', label: 'Administración', icon: FileSpreadsheet },
 	{ href: '/dashboard/users', label: 'Usuarios', icon: Users, requiredRole: UserRole.SUPER_ADMIN },
-	{ href: '/dashboard/reports', label: 'Reportes', icon: BarChart3,requiredRole: UserRole.ADMIN },
+	{ href: '/dashboard/reports', label: 'Reportes', icon: BarChart3 },
 ];
 
 interface SidebarProps {

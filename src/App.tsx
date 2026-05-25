@@ -13,6 +13,7 @@ import AdministrationPage from '@/pages/Administration';
 import LoginPage from '@/pages/Login';
 import DevicesPage from '@/pages/Devices';
 import UsersPage from '@/pages/Users';
+import ReportsPage from './pages/Reports';
 
 function App() {
   const { isAuthenticated } = useAuthStore();
@@ -84,6 +85,8 @@ function App() {
 								</ProtectedContent>
 							}
 						/>
+
+						<Route path="/dashboard/reports" element={<ReportsPage />} />
 					</Route>
 
 					<Route
