@@ -23,12 +23,26 @@ import DataTableViewOptions from '@/components/devices/dataTableViewOptions';
 import { useDeviceActions } from '@/contexts/DeviceActionsContext';
 import TerminalResponses from './TerminalResponse'
 import StatusConnection from '../StatusConnection'
+import { cn } from '@/lib/utils'
+
+const nameStorageFilterColumn = 'devices-online-filter';
 
 export default function TableContent() {
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(() => {
+		try {
+			const saved = localStorage.getItem(nameStorageFilterColumn);
+			if (saved === null) return [];
+			const value = JSON.parse(saved) as boolean;
+			return [{ id: 'online', value }];
+		} catch {
+			return [];
+		}
+	});
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [globalFilter, setGlobalFilter] = useState('');
+	const [highlightFilter, setHighlightFilter] = useState(() => localStorage.getItem(nameStorageFilterColumn) !== null);
+
 	const columns = useMemo<ColumnDef<Device>[]>(() => deviceColumns, []);
 	const { devices, isRefreshing, refresh } = useDeviceActions();
 
@@ -87,7 +101,10 @@ export default function TableContent() {
 
 	return (
 		<div className='space-y-6 h-full pt-2'>
-			<StatusConnection connectedDevices={connectedDevices} totalDevices={totalDevices} />
+			<StatusConnection
+				connectedDevices={connectedDevices}
+				totalDevices={totalDevices}
+			/>
 
 			<Card className='flex flex-col h-full'>
 				<CardHeader>
@@ -126,11 +143,19 @@ export default function TableContent() {
 								'all'
 							}
 							onValueChange={(value) => {
+								setHighlightFilter(false);
 								const filterValue = value === 'Conectado' ? true : value === 'Desconectado' ? false : null;
 								table.getColumn('online')?.setFilterValue(filterValue);
+
+								// Persistir en localStorage
+								if (filterValue === null) {
+									localStorage.removeItem(nameStorageFilterColumn);
+								} else {
+									localStorage.setItem(nameStorageFilterColumn, JSON.stringify(filterValue));
+								}
 							}}
 						>
-							<SelectTrigger className='sm:w-48'>
+							<SelectTrigger className={cn('sm:w-48', highlightFilter && 'ring-amber-300/40 border-amber-200')}>
 								<SelectValue placeholder='Filtrar por estado' />
 							</SelectTrigger>
 							<SelectContent className='sm:w-48'>

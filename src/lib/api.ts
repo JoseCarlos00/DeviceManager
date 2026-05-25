@@ -46,7 +46,11 @@ apiClient.interceptors.response.use(
 		const isRefreshCall = originalRequest.url?.includes('/auth/refresh');
 
 		// Si es 401 y no es refresh call y no hemos reintentado
-		if (error.response?.status === 401 && !originalRequest._retry && !isRefreshCall) {
+		if (
+			(error.response?.status === 401 || error.response?.status === 403) &&
+			!originalRequest._retry &&
+			!isRefreshCall
+		) {
 			// Si ya hay un refresh en proceso, agregar a la cola
 			if (isRefreshing) {
 				return new Promise((resolve, reject) => {
