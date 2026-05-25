@@ -81,6 +81,7 @@ export default function MaintenanceModeCard({ totalDevices }: MaintenanceModeCar
 			handleResponse(response, {
 				successMessage: `Modo mantenimiento activado hasta ${untilDateReadable}`,
 				icon: <Wrench className='h-4 w-4' />,
+				addToLog: false,
 			});
 
 

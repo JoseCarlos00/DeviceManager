@@ -41,6 +41,7 @@ export default function UpdateNotificationCard({ connectedDevices, totalDevices 
 			handleResponse(response, {
 				successMessage: `Notificación enviada a ${connectedDevices} dispositivos`,
 				icon: <RefreshCw className='h-4 w-4' />,
+				addToLog: false,
 			});
 
 			if (response?.status === 'OK') {

@@ -52,6 +52,7 @@ export default function BroadcastMessageCard({ connectedDevices }: BroadcastMess
 			handleResponse(response, {
 				successMessage: `Mensaje enviado a ${connectedDevices} dispositivos`,
 				icon: <MessageSquare className='h-4 w-4' />,
+				addToLog: false,
 			});
 
 			if (response?.status === 'OK') {

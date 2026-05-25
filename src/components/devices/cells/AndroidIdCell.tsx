@@ -29,7 +29,6 @@ export function AndroidIdCell({ row }: AndroidIdCellProps) {
         value={messageText}
         onChange={(e) => setMessageText(e.target.value)}
         placeholder='Escribe el mensaje'
-        disabled={!isConnected}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
             e.preventDefault();
