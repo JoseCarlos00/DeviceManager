@@ -1,10 +1,5 @@
-'use client'
-
-// ============================================
-// Componente para proteger contenido por rol
-
-import { useHasRole } from '@/hooks/use-permissions';
-import { UserRole } from '@/lib/auth/roles';
+import { useHasRole } from '@/hooks/usePermissions';
+import { UserRole } from '@/lib/roles'; // ← tu proyecto usa @/lib/roles, no @/lib/auth/roles
 
 interface ProtectedContentProps {
 	requiredRole: UserRole;
@@ -14,10 +9,6 @@ interface ProtectedContentProps {
 
 export function ProtectedContent({ requiredRole, children, fallback = null }: ProtectedContentProps) {
 	const hasRole = useHasRole(requiredRole);
-
-	if (!hasRole) {
-		return <>{fallback}</>;
-	}
-
+	if (!hasRole) return <>{fallback}</>;
 	return <>{children}</>;
 }

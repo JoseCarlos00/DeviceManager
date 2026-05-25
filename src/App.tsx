@@ -1,14 +1,18 @@
 import { useMemo } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom'
+
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'; 
-import  Login  from './pages/Login'
-import ProtectedLayout from './components/ProtectedLayout';
-import Devices from './pages/Devices'
-import Administration from './pages/Administration'
 import { useDeviceWebSocket } from '@/hooks/useDeviceWebSocket';
-import { DeviceActionsProvider } from './contexts/DeviceActionsContext'
+import { DeviceActionsProvider } from '@/contexts/DeviceActionsContext';
 import { useAuthStore } from '@/stores/authStore';
+import { UserRole } from '@/lib/roles';
+import { ProtectedContent } from '@/components/auth/protectedContent';
+import ProtectedLayout from '@/components/ProtectedLayout';
+import AdministrationPage from '@/pages/Administration';
+import LoginPage from '@/pages/Login';
+import DevicesPage from '@/pages/Devices';
+import UsersPage from '@/pages/Users';
 
 function App() {
   const { isAuthenticated } = useAuthStore();
@@ -44,23 +48,58 @@ function App() {
   );
 
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <DeviceActionsProvider value={value}>
-        <Routes>
-          <Route path="/login" element={<Login />} />
+		<ThemeProvider
+			defaultTheme='dark'
+			storageKey='vite-ui-theme'
+		>
+			<DeviceActionsProvider value={value}>
+				<Routes>
+					<Route
+						path='/login'
+						element={<LoginPage />}
+					/>
 
-          <Route element={<ProtectedLayout />}>
-            {/* Ya no necesitamos el layout intermedio DeviceActionsLayout */}
-            <Route path="/dashboard" element={<Devices />} />
-            <Route path="/dashboard/administration" element={<Administration />} />
-          </Route>
-          
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-      </DeviceActionsProvider>
-      <Toaster />
-    </ThemeProvider>
-  )
+					<Route element={<ProtectedLayout />}>
+						<Route
+							path='/dashboard'
+							element={<DevicesPage />}
+						/>
+						<Route
+							path='/dashboard/administration'
+							element={<AdministrationPage />}
+						/>
+
+						<Route
+							path='/dashboard/users'
+							element={
+								<ProtectedContent
+									requiredRole={UserRole.SUPER_ADMIN}
+									fallback={
+										<div className='flex items-center justify-center h-full pt-20 text-muted-foreground text-sm'>
+											No tienes permisos para acceder a esta página.
+										</div>
+									}
+								>
+									<UsersPage />
+								</ProtectedContent>
+							}
+						/>
+					</Route>
+
+					<Route
+						path='/'
+						element={
+							<Navigate
+								to='/dashboard'
+								replace
+							/>
+						}
+					/>
+				</Routes>
+			</DeviceActionsProvider>
+			<Toaster />
+		</ThemeProvider>
+	);
 }
 
 export default App

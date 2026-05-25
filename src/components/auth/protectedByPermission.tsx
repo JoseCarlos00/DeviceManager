@@ -1,10 +1,4 @@
-'use client'
-
-// ============================================
-// Componente para proteger contenido por permiso
-// ============================================
-
-import { usePermission } from "@/hooks/use-permissions"
+import { usePermission } from '@/hooks/usePermissions';
 
 interface ProtectedByPermissionProps {
 	permission: string;
@@ -14,10 +8,6 @@ interface ProtectedByPermissionProps {
 
 export function ProtectedByPermission({ permission, children, fallback = null }: ProtectedByPermissionProps) {
 	const hasPermission = usePermission(permission);
-
-	if (!hasPermission) {
-		return <>{fallback}</>;
-	}
-
+	if (!hasPermission) return <>{fallback}</>;
 	return <>{children}</>;
 }

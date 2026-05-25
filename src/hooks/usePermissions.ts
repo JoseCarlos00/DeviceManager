@@ -1,9 +1,6 @@
-'use client'
-
-import { useUser } from '@/hooks/use-user';
-import { UserRole, hasEqualOrHigherRole } from '@/lib/auth/roles';
-import { hasPermission as checkPermission} from '@/lib/auth/permissions';
-
+import { useAuthStore as useUser } from '@/stores/authStore';
+import { UserRole, hasEqualOrHigherRole } from '@/lib/roles'; // ← corregido
+import { hasPermission as checkPermission } from '@/lib/permissions'; // ← corregido
 /**
  * Hook para verificar si el usuario tiene un permiso específico
  */
