@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Users, PanelLeftClose, BarChart3, FileSpreadsheet } from 'lucide-react';
+import { Home, Users, PanelLeftClose, BarChart3, MessageSquare, Wrench } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { ProtectedContent } from '@/components/auth/protectedContent';
@@ -7,9 +7,10 @@ import { UserRole } from '@/lib/roles';
 
 const navItems = [
 	{ href: '/dashboard', label: 'Dispositivos', icon: Home },
-	{ href: '/dashboard/administration', label: 'Administración', icon: FileSpreadsheet },
+	{ href: '/dashboard/broadcast', label: 'Broadcast', icon: MessageSquare },
+	{ href: '/dashboard/maintenance', label: 'Mantenimiento', icon: Wrench, requiredRole: UserRole.ADMIN },
+	{ href: '/dashboard/reports', label: 'Reportes', icon: BarChart3, requiredRole: UserRole.ADMIN },
 	{ href: '/dashboard/users', label: 'Usuarios', icon: Users, requiredRole: UserRole.SUPER_ADMIN },
-	{ href: '/dashboard/reports', label: 'Reportes', icon: BarChart3 },
 ];
 
 interface SidebarProps {

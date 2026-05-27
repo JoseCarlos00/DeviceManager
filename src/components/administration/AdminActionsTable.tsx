@@ -1,11 +1,10 @@
-// components/administration/AdminActionsTable.tsx
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { MessageSquare, Wrench, RefreshCw, Eye, History } from 'lucide-react';
-import { useAdminActionsStore, type AdminAction } from '@/stores/adminActionsStore';
+import { useAdminActionsStore, type AdminAction, type AdminActionType } from '@/stores/adminActionsStore';
 import ActionDetailsDialog from './ActionDetailsDialog';
 
 const ACTION_ICONS = {
@@ -20,8 +19,16 @@ const ACTION_LABELS = {
 	update_notification: 'Notificación de Actualización',
 };
 
-export default function AdminActionsTable() {
-	const actions = useAdminActionsStore((state) => state.actions);
+interface AdminActionsTableProps {
+	filter?: AdminActionType[];
+}
+
+export default function AdminActionsTable({ filter }: AdminActionsTableProps) {
+	const allActions = useAdminActionsStore((state) => state.actions);
+	const actions = filter
+		? allActions.filter((a) => filter.includes(a.action))
+		: allActions;
+
 	const [selectedAction, setSelectedAction] = useState<AdminAction | null>(null);
 	const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -36,11 +43,13 @@ export default function AdminActionsTable() {
 				<CardHeader>
 					<CardTitle className='flex items-center gap-2'>
 						<History className='h-5 w-5' />
-						Historial de Acciones
+						Historial
 					</CardTitle>
 				</CardHeader>
 				<CardContent>
-					<p className='text-center text-sm text-muted-foreground py-8'>No hay acciones registradas</p>
+					<p className='text-center text-sm text-muted-foreground py-8'>
+						No hay acciones registradas en esta sesión.
+					</p>
 				</CardContent>
 			</Card>
 		);
@@ -52,7 +61,7 @@ export default function AdminActionsTable() {
 				<CardHeader>
 					<CardTitle className='flex items-center gap-2'>
 						<History className='h-5 w-5' />
-						Historial de Acciones
+						Historial
 					</CardTitle>
 				</CardHeader>
 				<CardContent>
@@ -73,7 +82,9 @@ export default function AdminActionsTable() {
 									const Icon = ACTION_ICONS[action.action];
 									return (
 										<TableRow key={action.id}>
-											<TableCell className='font-mono text-xs'>{new Date(action.timestamp).toLocaleString()}</TableCell>
+											<TableCell className='font-mono text-xs'>
+												{new Date(action.timestamp).toLocaleString()}
+											</TableCell>
 											<TableCell>
 												<div className='flex items-center gap-2'>
 													<Icon className='h-4 w-4 text-muted-foreground' />

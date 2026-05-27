@@ -9,7 +9,8 @@ import { useAuthStore } from '@/stores/authStore';
 import { UserRole } from '@/lib/roles';
 import { ProtectedContent } from '@/components/auth/protectedContent';
 import ProtectedLayout from '@/components/ProtectedLayout';
-import AdministrationPage from '@/pages/Administration';
+import BroadcastPage from './pages/Broadcast';
+import MaintenancePage from './pages/Maintenance';
 import LoginPage from '@/pages/Login';
 import DevicesPage from '@/pages/Devices';
 import UsersPage from '@/pages/Users';
@@ -65,10 +66,6 @@ function App() {
 							path='/dashboard'
 							element={<DevicesPage />}
 						/>
-						<Route
-							path='/dashboard/administration'
-							element={<AdministrationPage />}
-						/>
 
 						<Route
 							path='/dashboard/users'
@@ -86,7 +83,41 @@ function App() {
 							}
 						/>
 
-						<Route path="/dashboard/reports" element={<ReportsPage />} />
+						<Route
+							path='/dashboard/broadcast'
+							element={
+								<ProtectedContent
+									requiredRole={UserRole.ADMIN}
+									fallback={
+										<div className='flex items-center justify-center h-full pt-20 text-muted-foreground text-sm'>
+											No tienes permisos para acceder a esta página.
+										</div>
+									}
+								>
+									<BroadcastPage />
+								</ProtectedContent>
+							}
+						/>
+						<Route
+							path='/dashboard/maintenance'
+							element={
+								<ProtectedContent
+									requiredRole={UserRole.ADMIN}
+									fallback={
+										<div className='flex items-center justify-center h-full pt-20 text-muted-foreground text-sm'>
+											No tienes permisos para acceder a esta página.
+										</div>
+									}
+								>
+									<MaintenancePage />
+								</ProtectedContent>
+							}
+						/>
+
+						<Route
+							path='/dashboard/reports'
+							element={<ReportsPage />}
+						/>
 					</Route>
 
 					<Route
