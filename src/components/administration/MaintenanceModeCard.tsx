@@ -128,6 +128,7 @@ export default function MaintenanceModeCard({ totalDevices }: MaintenanceModeCar
 								className='flex-1 cursor-pointer'
 							>
 								<Clock className='h-4 w-4 mr-2' />
+								Tiempo
 							</Button>
 							<Button
 								type='button'
@@ -200,9 +201,6 @@ export default function MaintenanceModeCard({ totalDevices }: MaintenanceModeCar
 						Activar Modo Mantenimiento
 					</Button>
 
-					<p className='text-xs text-muted-foreground'>
-						ℹ️ Los dispositivos recibirán una notificación y entrarán en modo restringido.
-					</p>
 				</CardContent>
 			</Card>
 

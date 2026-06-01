@@ -78,14 +78,6 @@ export default function UpdateNotificationCard({ connectedDevices, totalDevices 
 					<CardDescription>Notifica a todos los dispositivos para revisar actualizaciones</CardDescription>
 				</CardHeader>
 				<CardContent className='space-y-4'>
-					<div className='p-4 bg-muted rounded-md space-y-2'>
-						<p className='text-sm font-medium'>Cómo funciona:</p>
-						<ul className='text-sm text-muted-foreground space-y-1'>
-							<li>• Se envía una notificación push a todos los dispositivos</li>
-							<li>• Cada dispositivo revisa si hay actualizaciones disponibles</li>
-							<li>• Los usuarios reciben una notificación si hay actualizaciones</li>
-						</ul>
-					</div>
 
 					<div className='grid grid-cols-2 gap-4 text-center'>
 						<div className='p-3 bg-green-50 dark:bg-green-950 rounded-md'>
@@ -107,9 +99,6 @@ export default function UpdateNotificationCard({ connectedDevices, totalDevices 
 						Notificar a todos los dispositivos
 					</Button>
 
-					<p className='text-xs text-muted-foreground'>
-						ℹ️ Solo los dispositivos conectados recibirán la notificación.
-					</p>
 				</CardContent>
 			</Card>
 
