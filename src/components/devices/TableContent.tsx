@@ -114,13 +114,14 @@ export default function TableContent() {
 						{/* Indicador de conexión y botón refresh */}
 						<div className='flex items-center gap-2'>
 							<Button
+								className='cursor-pointer'
 								variant='outline'
 								size='sm'
 								onClick={refresh}
 								disabled={isRefreshing}
 							>
 								<RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-								<span className='ml-2 hidden sm:inline'>{isRefreshing ? 'Actualizando...' : 'Refrescar'}</span>
+								<span className='cursor-pointer ml-2 hidden sm:inline'>{isRefreshing ? 'Actualizando...' : 'Refrescar'}</span>
 							</Button>
 						</div>
 					</div>
@@ -155,7 +156,7 @@ export default function TableContent() {
 								}
 							}}
 						>
-							<SelectTrigger className={cn('sm:w-48', highlightFilter && 'ring-amber-300/40 border-amber-200')}>
+							<SelectTrigger className={cn('cursor-pointer sm:w-48', highlightFilter && 'ring-amber-300/40 border-amber-200')}>
 								<SelectValue placeholder='Filtrar por estado' />
 							</SelectTrigger>
 							<SelectContent className='sm:w-48'>

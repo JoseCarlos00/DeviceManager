@@ -15,14 +15,14 @@ export default function DataTableViewOptions<TData>({ table }: { table: Table<TD
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant='outline' size='sm' className='ml-auto hidden h-8 lg:flex'>
+				<Button variant='outline' size='sm' className='cursor-pointer ml-auto hidden h-8 lg:flex'>
 					<Settings2 />
 					View
 				</Button>
 			</DropdownMenuTrigger>
 			
 			<DropdownMenuContent align='end' className='w-37.5'>
-				<DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+				<DropdownMenuLabel>Ocultar Columnas</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				{table
 					.getAllColumns()
@@ -31,7 +31,7 @@ export default function DataTableViewOptions<TData>({ table }: { table: Table<TD
 						return (
 							<DropdownMenuCheckboxItem
 								key={column.id}
-								className='capitalize'
+								className='cursor-pointer capitalize'
 								checked={column.getIsVisible()}
 								onCheckedChange={(value) => column.toggleVisibility(!!value)}
 							>

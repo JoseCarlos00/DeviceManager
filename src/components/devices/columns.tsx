@@ -72,7 +72,7 @@ export const columns: ColumnDef<Device>[] = [
 			/>
 		),
 		cell: ({ row }) => <AndroidIdCell row={row} />,
-		enableHiding: false,
+		enableHiding: true,
 	},
 	{
 		accessorKey: 'equipo',
