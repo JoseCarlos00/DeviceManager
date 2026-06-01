@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useDeviceActions } from '@/contexts/DeviceActionsContext';
@@ -24,6 +24,17 @@ export function MessageInputCell({ row }: MessageInputCellProps) {
 
   const { SEND_MESSAGE, isConnected } = useDeviceActions();
   const { handleResponse } = useResponseHandler();
+
+  useEffect(() => {
+    if (messageRowId === row.id) {
+      const timeout = setTimeout(() => {
+        setMessageRowId(null);
+        setMessageText('');
+      }, 30000); // 30 segundos
+
+      return () => clearTimeout(timeout);
+    }
+  }, [messageRowId, messageText, row.id, setMessageRowId, setMessageText]);
 
   if (messageRowId === row.id) {
     return (

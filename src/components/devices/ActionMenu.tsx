@@ -126,12 +126,17 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 		<div className='flex flex-col items-center gap-1'>
 			<DropdownMenu
 				open={menuOpen}
-				onOpenChange={setMenuOpen}
+				onOpenChange={(open) => {
+					setMenuOpen(open);
+					if (open) {
+						setMessageRowId(null);
+					}
+				}}
 			>
 				<DropdownMenuTrigger asChild>
 					<Button
 						variant='ghost'
-						className='h-8 w-8 p-0'
+						className='cursor-pointer h-8 w-8 p-0'
 						disabled={!isConnected}
 					>
 						<span className='sr-only'></span>
