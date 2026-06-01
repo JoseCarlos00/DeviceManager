@@ -135,7 +135,7 @@ export const createDeviceHandlers = (
 // ============ HANDLERS DE DATOS ============
 
 export const createDataHandlers = (fetchDevices: () => void) => {
-	const onDataModified = (res: unknown) => {
+	const onDataModified = () => {
 		toast.info('Datos modificados, actualizando lista de  dispositivos...')
 		fetchDevices();
 	};
