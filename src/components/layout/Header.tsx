@@ -27,7 +27,7 @@ export default function Header({ onMenuClick }: AppHeaderProps) {
 					<div>
 						<img src={logo} alt="Logo" className='h-11 w-auto rounded-[50%] inline-block mr-2.5'/>
 						<p className='mt-1 text-sm text-muted-foreground inline'>
-							Bienvenido de nuevo, {user?.username ?? 'invitado'} 👋
+							{user?.username ?? 'Invitado'} 👋
 						</p>
 						
 					</div>
