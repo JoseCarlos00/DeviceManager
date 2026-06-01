@@ -143,7 +143,10 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 					align='end'
 					hidden={!isConnected}
 				>
-					<DropdownMenuItem onClick={() => handleAction('ping')}>
+					<DropdownMenuItem
+						className='cursor-pointer'
+						onClick={() => handleAction('ping')}
+					>
 						<SmartphoneNfc className='mr-2 h-4 w-4' />
 						Ping
 					</DropdownMenuItem>
@@ -151,6 +154,7 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 					<DropdownMenuSeparator />
 
 					<DropdownMenuItem
+						className='cursor-pointer'
 						onSelect={(e) => {
 							e.preventDefault();
 							setMenuOpen(false);
@@ -163,10 +167,13 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 
 					<DropdownMenuSeparator />
 
-					<DropdownMenuItem onClick={() => handleAction('message')}>
+					<DropdownMenuItem
+						className='cursor-pointer'
+						onClick={() => handleAction('message')}
+					>
 						<MessageSquareText className='mr-2 h-4 w-4' />
 						Mensaje
-						</DropdownMenuItem>
+					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
 
