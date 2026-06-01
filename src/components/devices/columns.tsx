@@ -5,7 +5,7 @@ import { Wifi, WifiOff } from 'lucide-react';
 
 import DataTableColumnHeader from '@/components/devices/DataTableHeader';
 import ActionsMenu from './ActionMenu';
-import { AndroidIdCell } from './cells/AndroidIdCell';
+import { MessageInputCell } from '@/components/devices/cells/MessageInputCell';
 
 export const columns: ColumnDef<Device>[] = [
 	{
@@ -26,34 +26,37 @@ export const columns: ColumnDef<Device>[] = [
 		cell: ({ row }) => {
 			const online = row.getValue('online') as boolean | undefined;
 
-			if (online === undefined) {
-				return (
-					<Badge
-						variant='secondary'
-						className='gap-1'
-					>
-						<span className='h-2 w-2 rounded-full bg-gray-400' />
-						Desconocido
-					</Badge>
-				);
-			}
-
-			return online ? (
-				<Badge
-					variant='default'
-					className='gap-1 bg-green-600 hover:bg-green-700'
-				>
-					<Wifi className='h-3 w-3' />
-					Conectado
-				</Badge>
-			) : (
-				<Badge
-					variant='secondary'
-					className='gap-1'
-				>
-					<WifiOff className='h-3 w-3' />
-					Desconectado
-				</Badge>
+			return (
+				<div className='flex items-center gap-2 relative'>
+					{online === undefined ? (
+						<Badge
+							variant='secondary'
+							className='gap-1'
+						>
+							<span className='h-2 w-2 rounded-full bg-gray-400' />
+							Desconocido
+						</Badge>
+					) : online ? (
+						<Badge
+							variant='default'
+							className='gap-1 bg-green-600 hover:bg-green-700'
+						>
+							<Wifi className='h-3 w-3' />
+							Conectado
+						</Badge>
+					) : (
+						<Badge
+							variant='secondary'
+							className='gap-1'
+						>
+							<WifiOff className='h-3 w-3' />
+							Desconectado
+						</Badge>
+					)}
+					
+					
+					<MessageInputCell row={row} />
+				</div>
 			);
 		},
 		enableHiding: false,
@@ -71,7 +74,11 @@ export const columns: ColumnDef<Device>[] = [
 				title='Android Id'
 			/>
 		),
-		cell: ({ row }) => <AndroidIdCell row={row} />,
+		cell: ({ row }) => (
+			<div className='font-mono text-sm'>
+				{row.original.androidId || <span className='text-muted-foreground'>N/A</span>}
+			</div>
+		),
 		enableHiding: true,
 	},
 	{
