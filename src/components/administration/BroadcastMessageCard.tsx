@@ -82,7 +82,7 @@ export default function BroadcastMessageCard({ connectedDevices }: BroadcastMess
 
 	return (
 		<>
-			<Card>
+			<Card className='max-w-xl'>
 				<CardHeader>
 					<CardTitle className='flex items-center gap-2'>
 						<MessageSquare className='h-5 w-5' />
