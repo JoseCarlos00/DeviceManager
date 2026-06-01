@@ -15,6 +15,7 @@ import LoginPage from '@/pages/Login';
 import DevicesPage from '@/pages/Devices';
 import UsersPage from '@/pages/Users';
 import ReportsPage from './pages/Reports';
+import NotFoundPage from './pages/NotFound'
 
 function App() {
   const { isAuthenticated } = useAuthStore();
@@ -129,6 +130,8 @@ function App() {
 							/>
 						}
 					/>
+
+					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
 			</DeviceActionsProvider>
 			<Toaster />
