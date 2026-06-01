@@ -1,14 +1,32 @@
-import {useSearchParams } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Terminal } from 'lucide-react';
+import { useAuthStore } from '@/stores/authStore';
+
 import LoginForm from '@/components/auth/LoginForm';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Terminal } from 'lucide-react';
 
 
 export default function LoginPage() {
-  const [searchParams] = useSearchParams();
+	const [searchParams] = useSearchParams();
+	const navigate = useNavigate();
+	const { isAuthenticated, isLoading, checkAuth } = useAuthStore();
+
+	 useEffect(() => {
+			checkAuth();
+		}, [checkAuth]);
+
+	// Redirigir si ya está autenticado
+	useEffect(() => {
+		if (isAuthenticated) {
+			navigate('/dashboard', { replace: true });
+		}
+	}, [isAuthenticated, navigate]);
 
 	const errorMessage = searchParams.get('error') ?? '';
 	const successMessage = searchParams.get('message') ?? '';
+
+	if (isLoading) return null;
 
 	return (
 		<div className='min-h-screen flex items-center justify-center bg-background p-4'>
@@ -16,7 +34,11 @@ export default function LoginPage() {
 
 			<div className='w-full max-w-md px-4'>
 				<div className='mb-8 text-center relative'>
-					<img src="icon_logo.png" className='size-20 mx-auto rounded-[50%]' alt="Logo" />
+					<img
+						src='icon_logo.png'
+						className='size-20 mx-auto rounded-[50%]'
+						alt='Logo'
+					/>
 					<h1 className='text-3xl font-bold text-foreground mb-2'>Devices Admin</h1>
 					<p className='text-muted-foreground mt-2'>Panel de Administración</p>
 				</div>
