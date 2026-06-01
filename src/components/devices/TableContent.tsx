@@ -26,9 +26,9 @@ import StatusConnection from '../StatusConnection'
 import { cn } from '@/lib/utils'
 
 const nameStorageFilterColumn = 'devices-online-filter';
+export const nameStorageColumnVisibility = 'devices-column-visibility';
 
 export default function TableContent() {
-	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(() => {
 		try {
 			const saved = localStorage.getItem(nameStorageFilterColumn);
@@ -39,7 +39,20 @@ export default function TableContent() {
 			return [];
 		}
 	});
-	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
+	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() => {
+		try {
+			const saved = localStorage.getItem(nameStorageColumnVisibility);
+			if (saved) return JSON.parse(saved) as VisibilityState;
+		} catch {
+			// ignore
+		}
+
+		// Default: androidId oculto
+		return { androidId: false };
+	});
+	
+	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState('');
 	const [highlightFilter, setHighlightFilter] = useState(() => localStorage.getItem(nameStorageFilterColumn) !== null);
 
@@ -59,7 +72,13 @@ export default function TableContent() {
 		columns,
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
-		onColumnVisibilityChange: setColumnVisibility,
+		onColumnVisibilityChange: (updater) => {
+		setColumnVisibility((prev) => {
+			const next = typeof updater === 'function' ? updater(prev) : updater;
+			localStorage.setItem(nameStorageColumnVisibility, JSON.stringify(next));
+			return next;
+			});
+		},
 		onGlobalFilterChange: setGlobalFilter,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),

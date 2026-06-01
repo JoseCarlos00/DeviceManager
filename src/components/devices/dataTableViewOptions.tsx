@@ -10,13 +10,14 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 
 export default function DataTableViewOptions<TData>({ table }: { table: Table<TData> }) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant='outline' size='sm' className='cursor-pointer ml-auto hidden h-8 lg:flex'>
-					<Settings2 />
+				<Button variant='outline' size='sm' className='ml-auto hidden h-8 lg:flex cursor-pointer!'>
+					<Settings2 className='mr-1 h-4 w-4' />
 					View
 				</Button>
 			</DropdownMenuTrigger>
@@ -31,9 +32,13 @@ export default function DataTableViewOptions<TData>({ table }: { table: Table<TD
 						return (
 							<DropdownMenuCheckboxItem
 								key={column.id}
-								className='cursor-pointer capitalize'
+								className={cn(
+									'cursor-pointer capitalize',
+									!column.getIsVisible() && 'opacity-50'
+								)}
 								checked={column.getIsVisible()}
 								onCheckedChange={(value) => column.toggleVisibility(!!value)}
+								onSelect={(e) => e.preventDefault()}
 							>
 								{column.id}
 							</DropdownMenuCheckboxItem>
