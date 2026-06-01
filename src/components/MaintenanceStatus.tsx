@@ -8,17 +8,7 @@ export function MaintenanceStatus() {
 	const maintenanceData = useMaintenanceModeStore((state) => state.data);
 	const { formatted } = useMaintenanceCountdown();
 
-	if (!isMaintenanceMode) {
-		return (
-			<div className='space-y-1'>
-				<div className='flex items-center gap-2 text-muted-foreground text-sm'>
-					<Wrench className='h-4 w-4' />
-					En mantenimiento
-				</div>
-				<Badge variant='outline'>Inactivo</Badge>
-			</div>
-		);
-	}
+	if (!isMaintenanceMode) return null;
 
 	return (
 		<div className='space-y-1'>

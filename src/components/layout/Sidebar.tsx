@@ -21,6 +21,14 @@ interface SidebarProps {
 export default function Sidebar({ className, onMenuClick }: SidebarProps) {
 	const location = useLocation();
 
+	// Handler para asegurar que la navegación ocurra antes de cerrar el menú en móviles
+	const handleLinkClick = () => {
+		if (onMenuClick) {
+			// Un pequeño retraso evita que el cambio de estado interrumpa la navegación
+			setTimeout(onMenuClick, 10);
+		}
+	};
+
 	return (
 		<aside className={cn('border-r bg-card text-card-foreground', className)}>
 			<div className='flex h-full max-h-screen flex-col gap-2'>
@@ -28,6 +36,7 @@ export default function Sidebar({ className, onMenuClick }: SidebarProps) {
 					<Link
 						to='/dashboard'
 						className='flex items-center gap-2 font-semibold'
+						onClick={handleLinkClick}
 					>
 						{/* Puedes poner tu logo aquí */}
 						<span className=''>Device Admin</span>
@@ -52,9 +61,9 @@ export default function Sidebar({ className, onMenuClick }: SidebarProps) {
 										'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
 										isActive && 'bg-muted text-primary',
 									)}
-									onClick={onMenuClick}
+									onClick={handleLinkClick}
 								>
-									<Icon className='h-4 w-4' />
+									<Icon className='h-4 w-4 pointer-events-none' />
 									{label}
 								</Link>
 							);

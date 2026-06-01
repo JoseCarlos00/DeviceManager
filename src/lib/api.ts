@@ -91,8 +91,10 @@ apiClient.interceptors.response.use(
 				// Refresh falló → procesar cola con error
 				processQueue(refreshError, null);
 
-				// Limpiar auth store y redirigir a login
-				window.location.href = '/login';
+				// Solo redirigir si no estamos ya en la página de login para evitar bucles
+				if (window.location.pathname !== '/login') {
+					window.location.href = '/login?error=session_expired';
+				}
 
 				return Promise.reject(refreshError);
 			} finally {

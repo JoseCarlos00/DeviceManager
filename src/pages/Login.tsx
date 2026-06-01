@@ -10,18 +10,14 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 export default function LoginPage() {
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
-	const { isAuthenticated, isLoading, checkAuth } = useAuthStore();
-
-	 useEffect(() => {
-			checkAuth();
-		}, [checkAuth]);
+	const { isAuthenticated, isLoading } = useAuthStore();
 
 	// Redirigir si ya está autenticado
 	useEffect(() => {
-		if (isAuthenticated) {
+		if (!isLoading && isAuthenticated) {
 			navigate('/dashboard', { replace: true });
 		}
-	}, [isAuthenticated, navigate]);
+	}, [isAuthenticated, isLoading, navigate]);
 
 	const errorMessage = searchParams.get('error') ?? '';
 	const successMessage = searchParams.get('message') ?? '';

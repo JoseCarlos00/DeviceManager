@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom'
 
 import { ThemeProvider } from '@/components/theme-provider'
@@ -18,7 +18,11 @@ import ReportsPage from './pages/Reports';
 import NotFoundPage from './pages/NotFound'
 
 function App() {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, checkAuth } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
   
   // El socket vive aquí, en el nivel superior. Solo se conecta si hay autenticación.
   const {
