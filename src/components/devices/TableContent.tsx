@@ -18,7 +18,7 @@ import { Search, WifiIcon, WifiOffIcon, RefreshCw } from 'lucide-react';
 import { type Device } from '@/types';
 import { columns as deviceColumns } from '@/components/devices/columns';
 import DataTable from '@/components/devices/DataTable';
-import DataTableViewOptions from '@/components/devices/dataTableViewOptions';
+import DataTableViewOptions from '@/components/devices/DataTableViewOptions';
 
 import { useDeviceActions } from '@/contexts/DeviceActionsContext';
 import TerminalResponses from './TerminalResponse'
