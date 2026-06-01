@@ -145,7 +145,7 @@ export default function TableContent() {
 						</div>
 					</div>
 
-					<div className='mb-4 flex gap-4'>
+					<div className='mb-4 flex flex-wrap gap-4'>
 						<div className='relative flex-1'>
 							<Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
 							<Input
@@ -184,21 +184,21 @@ export default function TableContent() {
 									value='all'
 								>
 									<WifiIcon className='inline-block' />
-									<span className='ml-2 hidden sm:inline'>Todos</span>
+									<span className='ml-2 inline'>Todos</span>
 								</SelectItem>
 								<SelectItem
 									className='sm:w-48'
 									value='Conectado'
 								>
 									<WifiIcon className='inline-block' />
-									<span className='ml-2 hidden sm:inline'>Conectados</span>
+									<span className='ml-2 inline'>Conectados</span>
 								</SelectItem>
 								<SelectItem
 									className='sm:w-48'
 									value='Desconectado'
 								>
 									<WifiOffIcon className='inline-block' />
-									<span className='ml-2 hidden sm:inline'>Desconectados</span>
+									<span className='ml-2 inline'>Desconectados</span>
 								</SelectItem>
 							</SelectContent>
 						</Select>

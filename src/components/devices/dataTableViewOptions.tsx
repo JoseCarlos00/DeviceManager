@@ -16,7 +16,7 @@ export default function DataTableViewOptions<TData>({ table }: { table: Table<TD
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant='outline' size='sm' className='ml-auto hidden h-8 lg:flex cursor-pointer!'>
+				<Button variant='outline' size='sm' className='ml-auto flex h-8 cursor-pointer!'>
 					<Settings2 className='mr-1 h-4 w-4' />
 					View
 				</Button>
