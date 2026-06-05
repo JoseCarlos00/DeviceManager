@@ -15,7 +15,7 @@ export interface SocketConfig {
 	reconnectionDelay: number;
 	reconnectionAttempts: number;
 	query: {
-		clientType: string;
+		clientType: ClientType;
 	};
 }
 
@@ -31,6 +31,8 @@ export type Callback = (response: CallbackResponse | null) => void;
 export interface SendDeviceIdPayload {
 	target_device_id: string;
 }
+
+export type ClientType = 'WEB' | 'ANDROID';
 
 export interface IdentifyClientPayload {
 	clientType: ClientType;
@@ -49,13 +51,6 @@ export interface MessagePayload {
 export type AlarmActivationPayload = SendDeviceIdPayload & AlarmPayload;
 export type SendMessagePayload = SendDeviceIdPayload & { dataMessage: MessagePayload };
 export type SendAllMessagePayload = { dataMessage: MessagePayload };
-
-// MAINTENANCE MODE
-interface MaintenanceModeResponse {
-	status: ResponseSts;
-	reason?: string;
-	message?: string;
-}
 
 
 export interface MaintenanceModePayload {
