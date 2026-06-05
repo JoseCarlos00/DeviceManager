@@ -20,17 +20,19 @@ export const createSocketEmitters = (socketRef: React.RefObject<Socket | null>) 
 
 			if (typeof originalCallback === 'function') {
 				originalArgs[lastIndex] = (err: Error | null, response: CallbackResponse | null) => {
-					if (err) {
+					// Si hay respuesta válida del servidor, usarla siempre
+					const serverResponse = response ?? (err as unknown as CallbackResponse);
+					if (serverResponse && typeof serverResponse === 'object' && 'status' in serverResponse) {
+						(originalCallback as Callback)(serverResponse);
+					} else {
 						console.warn(`[WebSocket] Timeout en evento: ${event}`, err);
 						(originalCallback as Callback)(null);
-					} else {
-						(originalCallback as Callback)(response);
 					}
 				};
 			}
 
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			(socketRef.current.timeout(15000) as any).emit(event, ...originalArgs);
+			(socketRef.current.timeout(20000) as any).emit(event, ...originalArgs);
 		} else {
 			console.warn(`[WebSocket] No conectado, no se puede emitir: ${event}`);
 			const callback = args[args.length - 1];
