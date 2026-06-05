@@ -1,5 +1,7 @@
 import { submittedEventServer } from "@/lib/constants";
 
+export type ClientType = 'WEB_CLIENT';
+
 export interface DeviceStatusEvent {
 	deviceId: string;
 	battery?: number;
@@ -31,8 +33,6 @@ export type Callback = (response: CallbackResponse | null) => void;
 export interface SendDeviceIdPayload {
 	target_device_id: string;
 }
-
-export type ClientType = 'WEB' | 'ANDROID';
 
 export interface IdentifyClientPayload {
 	clientType: ClientType;
