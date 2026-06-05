@@ -1,6 +1,6 @@
 import { useState, type HTMLAttributes } from 'react';
 import type { Row } from '@tanstack/react-table';
-import { Bell, Pen, MessageSquareText, SmartphoneNfc, MoreVertical } from 'lucide-react';
+import { Bell, BellRing, Pen, MessageSquareText, SmartphoneNfc, MoreVertical } from 'lucide-react';
 import type { Callback, Device } from '@/types';
 import { useDeviceActions } from '@/contexts/DeviceActionsContext';
 import {
@@ -113,7 +113,8 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 	};
 
 	return (
-		<div className='flex items-center gap-2 w-30 shrink-0'>
+		<div className='flex items-center gap-2 w-30 shrink-0 relative'>
+
 			{/* Contenedor principal para alinear horizontalmente */}
 			<div
 				hidden={!isConnected}
@@ -185,28 +186,32 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 					</TooltipContent>
 				</Tooltip>
 			</div>
-			{alarm?.state === 'sending' && (
-				<Badge
-					variant='secondary'
-					className='text-xs'
-				>
-					Enviando alarma…
-				</Badge>
-			)}
-			{alarm?.state === 'active' && (
-				<Badge className='bg-red-600 text-xs'>
-					<Bell className='h-3 w-3 mr-1' />
-					Alarma activa
-				</Badge>
-			)}
-			{alarm?.state === 'error' && (
-				<Badge
-					variant='destructive'
-					className='text-xs'
-				>
-					Error
-				</Badge>
-			)}
+
+			<div className='absolute'>
+				{alarm?.state === 'sending' && (
+					<Badge
+						variant='secondary'
+						className='text-xs'
+					>
+						Enviando alarma…
+					</Badge>
+				)}
+				{alarm?.state === 'active' && (
+					<Badge className='bg-red-600 text-xs text-white'>
+						<BellRing className='h-3 w-3 mr-1' />
+						Alarma activa
+					</Badge>
+				)}
+				{alarm?.state === 'error' && (
+					<Badge
+						variant='destructive'
+						className='text-xs'
+					>
+						Error
+					</Badge>
+				)}
+			</div>
+
 			{/* Solo se abre si no se está enviando la alarma */}
 			<AlertDialog
 				open={alarmDialogOpen && alarmState !== 'sending'}
