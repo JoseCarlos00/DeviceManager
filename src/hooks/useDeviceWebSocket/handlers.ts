@@ -1,8 +1,7 @@
 // hooks/useDeviceWebSocket/handlers.ts
 import { toast } from 'sonner';
 import type { Socket } from 'socket.io-client';
-import type { DeviceStatusEvent } from '@/types';
-import type { Device } from '@/types'
+import type { Device, DeviceStatusEvent } from '@/types';
 import { submittedEventServer } from '@/lib/constants'
 
 // ============ HANDLERS DE CONEXIÓN ============
