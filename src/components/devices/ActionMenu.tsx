@@ -1,14 +1,6 @@
 import { useState, type HTMLAttributes } from 'react';
 import type { Row } from '@tanstack/react-table';
-import { MoreHorizontal, Bell, Pen, MessageSquareText, SmartphoneNfc, MoreVertical } from 'lucide-react';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
+import { Bell, Pen, MessageSquareText, SmartphoneNfc, MoreVertical } from 'lucide-react';
 import type { Callback, Device } from '@/types';
 import { useDeviceActions } from '@/contexts/DeviceActionsContext';
 import {
@@ -43,8 +35,6 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 	const clearAlarm = useDeviceUIStore((state) => state.clearAlarm);
 
 	const { handleResponse } = useResponseHandler();
-
-	const [menuOpen, setMenuOpen] = useState(false);
 	const [alarmDialogOpen, setAlarmDialogOpen] = useState(false);
 
 	const [alarmState, setAlarmState] = useState<AlarmUIState>('idle');
@@ -56,7 +46,7 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 	const alarm = useDeviceUIStore((state) => (deviceId ? state.alarms[deviceId] : undefined));
 
 	if (!currentUser.androidId || !currentUser.online) {
-		return <span className='inline-flex items-center justify-center size-8 opacity-50'></span>;
+		return <div className='w-30 shrink-0' />;
 	}
 
 	const handleAction = (action: 'ping' | 'alert' | 'message') => {
@@ -123,80 +113,78 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 	};
 
 	return (
-		<div className='flex flex-col items-center gap-1'>
-			<DropdownMenu
-				open={menuOpen}
-				onOpenChange={(open) => {
-					setMenuOpen(open);
-					if (open) {
-						setMessageRowId(null);
-					}
-				}}
+		<div className='flex items-center gap-2 w-30 shrink-0'>
+			{/* Contenedor principal para alinear horizontalmente */}
+			<div
+				hidden={!isConnected}
+				className='flex items-center gap-2'
 			>
-				<DropdownMenuTrigger asChild>
-					<Button
-						variant='ghost'
-						className='cursor-pointer h-8 w-8 p-0'
-						disabled={!isConnected}
-					>
-						<span className='sr-only'></span>
-						<MoreHorizontal className='h-4 w-4' />
-					</Button>
-				</DropdownMenuTrigger>
-
-				<DropdownMenuContent
-					align='end'
-					hidden={!isConnected}
-				>
-					<DropdownMenuItem
-						className='cursor-pointer'
-						onClick={() => handleAction('ping')}
-					>
-						<SmartphoneNfc className='mr-2 h-4 w-4' />
-						Ping
-					</DropdownMenuItem>
-
-					<DropdownMenuSeparator />
-
-					<DropdownMenuItem
-						className='cursor-pointer flex items-center justify-between gap-2 pr-1'
-						onSelect={(e) => {
-							e.preventDefault();
-							handleActivateAlarm();
-						}}
-					>
-						<div className='flex items-center flex-1'>
-							<Bell className='mr-2 h-4 w-4' />
-							<span>Activar Alarma</span>
-						</div>
-
+				{/* Ping */}
+				<Tooltip>
+					<TooltipTrigger asChild>
 						<div
-							role='button'
-							className='p-1 hover:bg-accent rounded-sm transition-colors'
-							title='Configurar duración'
-							onClick={(e) => {
-								e.stopPropagation();
-								e.preventDefault();
-								setMenuOpen(false);
-								setAlarmDialogOpen(true);
-							}}
+							className='cursor-pointer p-1 hover:bg-accent rounded-sm transition-colors'
+							onClick={() => handleAction('ping')}
 						>
-							<MoreVertical className='h-4 w-4 text-muted-foreground hover:text-foreground' />
+							<SmartphoneNfc className='h-4 w-4' />
 						</div>
-					</DropdownMenuItem>
+					</TooltipTrigger>
+					<TooltipContent>
+						<p>Enviar Ping</p>
+					</TooltipContent>
+				</Tooltip>
 
-					<DropdownMenuSeparator />
+				{/* Alarm */}
+				<div className='flex items-center'>
+					{/* Contenedor para la campana y el icono de más opciones */}
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<div
+								className='cursor-pointer p-1 hover:bg-accent rounded-sm transition-colors'
+								onClick={() => handleActivateAlarm()}
+							>
+								<Bell className='h-4 w-4' />
+							</div>
+						</TooltipTrigger>
+						<TooltipContent>
+							<p>Activar Alarma</p>
+						</TooltipContent>
+					</Tooltip>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<div
+								role='button'
+								className='cursor-pointer p-1 hover:bg-accent rounded-sm transition-colors'
+								title='Configurar duración'
+								onClick={(e) => {
+									e.stopPropagation(); // Evita que el clic se propague al icono de campana
+									setAlarmDialogOpen(true);
+								}}
+							>
+								<MoreVertical className='h-4 w-4 text-muted-foreground hover:text-foreground' />
+							</div>
+						</TooltipTrigger>
+						<TooltipContent>
+							<p>Configurar Alarma</p>
+						</TooltipContent>
+					</Tooltip>
+				</div>
 
-					<DropdownMenuItem
-						className='cursor-pointer'
-						onClick={() => handleAction('message')}
-					>
-						<MessageSquareText className='mr-2 h-4 w-4' />
-						Mensaje
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
-
+				{/* Message */}
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<div
+							className='cursor-pointer p-1 hover:bg-accent rounded-sm transition-colors'
+							onClick={() => handleAction('message')}
+						>
+							<MessageSquareText className='h-4 w-4' />
+						</div>
+					</TooltipTrigger>
+					<TooltipContent>
+						<p>Enviar Mensaje</p>
+					</TooltipContent>
+				</Tooltip>
+			</div>
 			{alarm?.state === 'sending' && (
 				<Badge
 					variant='secondary'
@@ -205,14 +193,12 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 					Enviando alarma…
 				</Badge>
 			)}
-
 			{alarm?.state === 'active' && (
 				<Badge className='bg-red-600 text-xs'>
 					<Bell className='h-3 w-3 mr-1' />
 					Alarma activa
 				</Badge>
 			)}
-
 			{alarm?.state === 'error' && (
 				<Badge
 					variant='destructive'
@@ -221,9 +207,9 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 					Error
 				</Badge>
 			)}
-
+			{/* Solo se abre si no se está enviando la alarma */}
 			<AlertDialog
-				open={alarmDialogOpen}
+				open={alarmDialogOpen && alarmState !== 'sending'}
 				onOpenChange={setAlarmDialogOpen}
 			>
 				<AlertDialogContent className='w-max'>
@@ -284,10 +270,14 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 						</AlertDialogCancel>
 
 						<AlertDialogAction
-							onClick={(e) => {
-								e.preventDefault();
-								handleActivateAlarm();
-							}}
+							onClick={
+								alarmState === 'active' || alarmState === 'error' || alarmState === 'idle'
+									? (e) => {
+											e.preventDefault();
+											handleActivateAlarm();
+										}
+									: undefined
+							}
 							className={
 								alarmState === 'active'
 									? 'bg-green-600 hover:bg-green-700 cursor-pointer'

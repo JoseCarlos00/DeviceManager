@@ -10,9 +10,11 @@ import { MessageInputCell } from '@/components/devices/cells/MessageInputCell';
 export const columns: ColumnDef<Device>[] = [
 	{
 		id: 'actions',
+		header: () => <div className='w-30' />,
 		cell: ({ row }) => {
 			return <ActionsMenu row={row} />;
 		},
+		size: 120,
 		enableHiding: false,
 	},
 	{

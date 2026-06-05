@@ -13,7 +13,10 @@ export default function DataTable<TData, TValue>({ table, columns }: DataTablePr
 					{table.getHeaderGroups().map((headerGroup) => (
 						<TableRow key={headerGroup.id}>
 							{headerGroup.headers.map((header) => (
-								<TableHead key={header.id}>
+								<TableHead
+									key={header.id}
+									style={{ width: header.getSize() }}
+								>
 									{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
 								</TableHead>
 							))}
@@ -33,6 +36,7 @@ export default function DataTable<TData, TValue>({ table, columns }: DataTablePr
 										<TableCell
 											className='py-0.5 px-1'
 											key={cell.id}
+											style={{ width: cell.column.getSize() }}
 										>
 											{flexRender(cell.column.columnDef.cell, cell.getContext())}
 										</TableCell>
