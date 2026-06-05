@@ -1,6 +1,6 @@
 import { useState, type HTMLAttributes } from 'react';
 import type { Row } from '@tanstack/react-table';
-import { MoreHorizontal, Bell, Pen, MessageSquareText, SmartphoneNfc } from 'lucide-react';
+import { MoreHorizontal, Bell, Pen, MessageSquareText, SmartphoneNfc, MoreVertical } from 'lucide-react';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -159,15 +159,30 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 					<DropdownMenuSeparator />
 
 					<DropdownMenuItem
-						className='cursor-pointer'
+						className='cursor-pointer flex items-center justify-between gap-2 pr-1'
 						onSelect={(e) => {
 							e.preventDefault();
-							setMenuOpen(false);
-							setAlarmDialogOpen(true);
+							handleActivateAlarm();
 						}}
 					>
-						<Bell className='mr-2 h-4 w-4' />
-						Activar Alarma
+						<div className='flex items-center flex-1'>
+							<Bell className='mr-2 h-4 w-4' />
+							<span>Activar Alarma</span>
+						</div>
+
+						<div
+							role='button'
+							className='p-1 hover:bg-accent rounded-sm transition-colors'
+							title='Configurar duración'
+							onClick={(e) => {
+								e.stopPropagation();
+								e.preventDefault();
+								setMenuOpen(false);
+								setAlarmDialogOpen(true);
+							}}
+						>
+							<MoreVertical className='h-4 w-4 text-muted-foreground hover:text-foreground' />
+						</div>
 					</DropdownMenuItem>
 
 					<DropdownMenuSeparator />
