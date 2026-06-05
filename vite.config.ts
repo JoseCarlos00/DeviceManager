@@ -31,17 +31,4 @@ export default defineConfig({
 			},
 		},
 	},
-	server: {
-		proxy: {
-			'/api': {
-				target: 'http://192.168.15.241:9001',
-				changeOrigin: true,
-				secure: false,
-			},
-			'/socket.io': {
-				target: 'ws://192.168.15.241:9001',
-				ws: true,
-			},
-		},
-	},
 });
