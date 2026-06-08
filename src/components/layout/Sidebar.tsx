@@ -4,6 +4,7 @@ import { Home, Users, PanelLeftClose, BarChart3, MessageSquare, Wrench } from 'l
 import { cn } from '@/lib/utils';
 import { ProtectedContent } from '@/components/auth/protectedContent';
 import { UserRole } from '@/lib/roles';
+import { useAppVersionStore } from '@/stores/appVersionStore'
 
 const navItems = [
 	{ href: '/dashboard', label: 'Dispositivos', icon: Home },
@@ -20,6 +21,7 @@ interface SidebarProps {
 
 export default function Sidebar({ className, onMenuClick }: SidebarProps) {
 	const location = useLocation();
+	const currentVersionName = useAppVersionStore((state) => state.currentVersionName);
 
 	// Handler para asegurar que la navegación ocurra antes de cerrar el menú en móviles
 	const handleLinkClick = () => {
@@ -80,6 +82,10 @@ export default function Sidebar({ className, onMenuClick }: SidebarProps) {
 							);
 						})}
 					</nav>
+				</div>
+
+				<div className='w-full text-center text-xs text-muted-foreground'>
+					{`Versión Android: ${currentVersionName}`}
 				</div>
 			</div>
 		</aside>
