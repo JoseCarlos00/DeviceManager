@@ -4,7 +4,7 @@ export type ClientType = 'WEB_CLIENT';
 
 export interface DeviceStatusEvent {
 	deviceId: string;
-	appVersion?: string;
+	appVersion?: number;
 }
 
 export interface SocketConfig {
