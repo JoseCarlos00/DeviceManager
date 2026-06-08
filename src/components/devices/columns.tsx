@@ -6,6 +6,7 @@ import { Wifi, WifiOff } from 'lucide-react';
 import DataTableColumnHeader from '@/components/devices/DataTableHeader';
 import ActionsMenu from './ActionMenu';
 import { MessageInputCell } from '@/components/devices/cells/MessageInputCell';
+import { VersionCell } from './cells/VersionCell'
 
 export const columns: ColumnDef<Device>[] = [
 	{
@@ -55,8 +56,7 @@ export const columns: ColumnDef<Device>[] = [
 							Desconectado
 						</Badge>
 					)}
-					
-					
+
 					<MessageInputCell row={row} />
 				</div>
 			);
@@ -145,5 +145,15 @@ export const columns: ColumnDef<Device>[] = [
 				<span className='text-muted-foreground text-xs'>N/A</span>
 			);
 		},
+	},
+	{
+		accessorKey: 'appVersion',
+		header: ({ column }) => (
+			<DataTableColumnHeader
+				column={column}
+				title='Versión'
+			/>
+		),
+		cell: ({ row }) => <VersionCell version={row.original.appVersion} />,
 	},
 ];

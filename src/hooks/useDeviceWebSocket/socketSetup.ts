@@ -41,7 +41,6 @@ export const setupSocket = ({
 	socket.on(receivedEventServer.DEVICE_CONNECTED, deviceHandlers.onDeviceConnected);
 	socket.on(receivedEventServer.DEVICE_RECONNECTED, deviceHandlers.onDeviceReconnected);
 	socket.on(receivedEventServer.DEVICE_DISCONNECTED, deviceHandlers.onDeviceDisconnected);
-	socket.on(receivedEventServer.DEVICE_BATTERY_UPDATE, deviceHandlers.onBatteryUpdate);
 
 	// ============ REGISTRAR EVENTOS DE DATOS ============
 

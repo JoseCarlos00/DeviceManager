@@ -82,6 +82,7 @@ export const createDeviceHandlers = (
 
 		addOrUpdateDevice(data.deviceId, {
 			online: true,
+			appVersion: data.appVersion,
 		});
 
 		toast.info('Dispositivo conectado', {
@@ -94,6 +95,7 @@ export const createDeviceHandlers = (
 
 		updateDeviceInState(data.deviceId, {
 			online: true,
+			appVersion: data.appVersion,
 		});
 
 		toast.success('Dispositivo reconectado', {
@@ -113,21 +115,10 @@ export const createDeviceHandlers = (
 		});
 	};
 
-	const onBatteryUpdate = (data: DeviceStatusEvent) => {
-		console.log('[WebSocket] 🔋 Actualización de batería:', data.deviceId, data.battery);
-
-		// Si tu tipo Device tiene campos de batería:
-		// updateDeviceInState(data.deviceId, {
-		//   battery: data.battery,
-		//   charging: data.charging
-		// });
-	};
-
 	return {
 		onDeviceConnected,
 		onDeviceReconnected,
 		onDeviceDisconnected,
-		onBatteryUpdate,
 	};
 };
 

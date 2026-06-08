@@ -1,5 +1,3 @@
-export const API_URL_AUTH = '/api/auth' as const;
-
 export const receivedEventServer = {
 	DATA_MODIFIED: 'data:modified',
 	DEVICE_HEARTBEAT: 'DEVICE_HEARTBEAT',
@@ -22,3 +20,5 @@ export const submittedEventServer = {
 
 	SET_SETTINGS: 'SET_SETTINGS', // *TODO: PENDIENTE DE IMPLEMENTAR EN LA APP*
 } as const;
+
+export const URL_VERSION_APP = 'https://raw.githubusercontent.com/JoseCarlos00/PulseAlert/main/release/release.json' as const;

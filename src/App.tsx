@@ -16,13 +16,16 @@ import DevicesPage from '@/pages/Devices';
 import UsersPage from '@/pages/Users';
 import ReportsPage from './pages/Reports';
 import NotFoundPage from './pages/NotFound'
+import { useAppVersionStore } from './stores/appVersionStore'
 
 function App() {
   const { isAuthenticated, checkAuth } = useAuthStore();
+	const fetchVersion = useAppVersionStore((state) => state.fetchVersion);
 
   useEffect(() => {
     checkAuth();
-  }, [checkAuth]);
+		 fetchVersion();
+  }, [checkAuth, fetchVersion]);
   
   // El socket vive aquí, en el nivel superior. Solo se conecta si hay autenticación.
   const {

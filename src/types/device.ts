@@ -1,14 +1,3 @@
-export interface Equipment {
-	id: string;
-	name: string;
-	model: string;
-	online: boolean;
-	battery?: number;
-	lastSeen?: string;
-	location?: string;
-	ipAddress?: string;
-}
-
 export interface Device {
 	id: string;
 	androidId: string | null;
@@ -22,8 +11,5 @@ export interface Device {
 
 	// Estado en tiempo real (viene del backend)
 	online?: boolean;
-	battery?: number;
-	charging?: boolean;
-	lastSeen?: number;
-	timeSinceLastSeen?: number;
+	appVersion?: number;
 }

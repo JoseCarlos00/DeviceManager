@@ -4,10 +4,7 @@ export type ClientType = 'WEB_CLIENT';
 
 export interface DeviceStatusEvent {
 	deviceId: string;
-	battery?: number;
-	charging?: boolean;
-	timestamp: number;
-	lastSeen?: number;
+	appVersion?: string;
 }
 
 export interface SocketConfig {
