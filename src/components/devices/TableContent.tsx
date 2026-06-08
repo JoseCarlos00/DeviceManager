@@ -49,7 +49,7 @@ export default function TableContent() {
 		}
 
 		// Default: androidId oculto
-		return { androidId: false };
+		return { androidId: false, appVersion: false};
 	});
 	
 	const [sorting, setSorting] = useState<SortingState>([]);
