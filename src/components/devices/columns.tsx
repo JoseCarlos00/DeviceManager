@@ -1,12 +1,10 @@
 import type { Device } from '@/types';
 import type { ColumnDef } from '@tanstack/react-table';
-import { Badge } from '@/components/ui/badge';
-import { Wifi, WifiOff } from 'lucide-react';
 
 import DataTableColumnHeader from '@/components/devices/DataTableHeader';
 import ActionsMenu from './ActionMenu';
-import { MessageInputCell } from '@/components/devices/cells/MessageInputCell';
 import { VersionCell } from './cells/VersionCell'
+import StateCell from './cells/StateCell'
 
 export const columns: ColumnDef<Device>[] = [
 	{
@@ -26,41 +24,7 @@ export const columns: ColumnDef<Device>[] = [
 				title='Estado'
 			/>
 		),
-		cell: ({ row }) => {
-			const online = row.getValue('online') as boolean | undefined;
-
-			return (
-				<div className='flex items-center gap-2 relative'>
-					{online === undefined ? (
-						<Badge
-							variant='secondary'
-							className='gap-1'
-						>
-							<span className='h-2 w-2 rounded-full bg-gray-400' />
-							Desconocido
-						</Badge>
-					) : online ? (
-						<Badge
-							variant='default'
-							className='gap-1 bg-green-600 hover:bg-green-700'
-						>
-							<Wifi className='h-3 w-3' />
-							Conectado
-						</Badge>
-					) : (
-						<Badge
-							variant='secondary'
-							className='gap-1'
-						>
-							<WifiOff className='h-3 w-3' />
-							Desconectado
-						</Badge>
-					)}
-
-					<MessageInputCell row={row} />
-				</div>
-			);
-		},
+		cell: ({ row }) => <StateCell row={row} />,
 		enableHiding: false,
 		filterFn: (row, id, value) => {
 			if (value === null) return true;
