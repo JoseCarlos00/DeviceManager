@@ -7,7 +7,7 @@ export function VersionCell({ version }: { version: number | undefined }) {
 
 
   if (!version) {
-    return <span className='text-muted-foreground text-xs'>—</span>;
+    return <span className='text-muted-foreground text-xs inline-block text-center w-full'>—</span>;
   }
 
   const isOutdated = currentVersion !== null && version !== currentVersion;
