@@ -3,8 +3,6 @@ import { AlertTriangle } from 'lucide-react';
 
 export function VersionCell({ version }: { version: number | undefined }) {
   const currentVersion = useAppVersionStore((state) => state.currentVersion);
-  const currentVersionName = useAppVersionStore((state) => state.currentVersionName);
-
 
   if (!version) {
     return <span className='text-muted-foreground text-xs inline-block text-center w-full'>—</span>;
@@ -14,7 +12,7 @@ export function VersionCell({ version }: { version: number | undefined }) {
 
   return (
 		<div className='flex items-center gap-1.5 text-center relative'>
-			<span className='font-mono text-xs text-center w-full'>{currentVersionName}</span>
+			<span className='font-mono text-xs text-center w-full'>v{version?.toString()?.split('').join('.')}</span>
 			{isOutdated && <AlertTriangle className='h-3.5 w-3.5 text-amber-500 shrink-0 absolute right-0' />}
 		</div>
 	);

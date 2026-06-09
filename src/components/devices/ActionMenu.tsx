@@ -1,6 +1,6 @@
 import { useState, type HTMLAttributes } from 'react';
 import type { Row } from '@tanstack/react-table';
-import { Bell, BellRing, Pen, MessageSquareText, SmartphoneNfc, MoreVertical } from 'lucide-react';
+import { BellRing, Pen, MessageSquareText, SmartphoneNfc, MoreVertical } from 'lucide-react';
 import type { Callback, Device } from '@/types';
 import { useDeviceActions } from '@/contexts/DeviceActionsContext';
 import {
@@ -27,7 +27,7 @@ interface ActionsMenuProps<TValue> extends HTMLAttributes<HTMLDivElement> {
 type AlarmUIState = 'idle' | 'sending' | 'active' | 'error';
 
 export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
-	const { isConnected, SEND_PING, ALARM_ACTIVATE } = useDeviceActions();
+	const { SEND_PING, ALARM_ACTIVATE } = useDeviceActions();
 	const setMessageRowId = useDeviceUIStore((state) => state.setMessageRowId);
 	const setAlarmSending = useDeviceUIStore((state) => state.setAlarmSending);
 	const setAlarmActive = useDeviceUIStore((state) => state.setAlarmActive);
@@ -45,9 +45,7 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 
 	const alarm = useDeviceUIStore((state) => (deviceId ? state.alarms[deviceId] : undefined));
 
-	if (!currentUser.androidId || !currentUser.online) {
-		return <div className='w-30 shrink-0' />;
-	}
+	const isDisabled = !currentUser.androidId || !currentUser.online;
 
 	const handleAction = (action: 'ping' | 'alert' | 'message') => {
 		if (!currentUser.androidId) return;
@@ -85,7 +83,7 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 		ALARM_ACTIVATE(payload, (response) => {
 			handleResponse(response, {
 				successMessage: `Alarma activada en ${currentUser.equipo}`,
-				icon: <Bell className='h-4 w-4' />,
+				icon: <BellRing className='h-4 w-4' />,
 			});
 
 			if (response?.status === 'OK') {
@@ -113,13 +111,11 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 	};
 
 	return (
-		<div className='flex items-center gap-2 w-30 shrink-0 relative'>
-
+		<div
+			className={`flex items-center gap-2 w-30 shrink-0 relative ${isDisabled ? 'opacity-45 pointer-events-none' : ''}`}
+		>
 			{/* Contenedor principal para alinear horizontalmente */}
-			<div
-				hidden={!isConnected}
-				className='flex items-center gap-2'
-			>
+			<div className='flex items-center gap-2'>
 				{/* Ping */}
 				<Tooltip>
 					<TooltipTrigger asChild>
@@ -144,7 +140,7 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 								className='cursor-pointer p-1 hover:bg-accent rounded-sm transition-colors'
 								onClick={() => handleActivateAlarm()}
 							>
-								<Bell className='h-4 w-4' />
+								<BellRing className='h-4 w-4' />
 							</div>
 						</TooltipTrigger>
 						<TooltipContent>
@@ -243,7 +239,7 @@ export default function ActionsMenu<TValue>({ row }: ActionsMenuProps<TValue>) {
 						<AlertDialogDescription>
 							{alarmState === 'active' ? (
 								<div className='flex items-center gap-2 text-green-600 font-medium'>
-									<Bell className='h-4 w-4 animate-pulse' />
+									<BellRing className='h-4 w-4 animate-pulse' />
 									Alarma enviada correctamente ({duration}s)
 								</div>
 							) : (
