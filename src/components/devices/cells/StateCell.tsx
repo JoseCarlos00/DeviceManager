@@ -9,30 +9,30 @@ export default function StateCell({ row }: { row: Row<Device> }) {
 	const online = row.getValue('online') as boolean | undefined;
 
 	return (
-		<div className='relative w-31'>
+		<div className='relative w-fit sm:w-31'>
 			{online === undefined ? (
 				<Badge
 					variant='secondary'
-					className='gap-1 w-28justify-start '
+					className='gap-1 w-fit sm:w-28 justify-start'
 				>
 					<span className='h-2 w-2 rounded-full bg-gray-400' />
-					Desconocido
+					<span className='hidden sm:inline'>Desconocido</span>
 				</Badge>
 			) : online ? (
 				<Badge
 					variant='default'
-					className='bg-green-600 hover:bg-green-700 w-28 justify-start gap-1'
+					className='bg-green-600 hover:bg-green-700 w-fit sm:w-28 justify-start gap-1'
 				>
 					<Wifi className='h-3 w-3' />
-					<span className='tracking-[0.06rem]'>Conectado</span>
+					<span className='tracking-[0.06rem] hidden sm:inline'>Conectado</span>
 				</Badge>
 			) : (
 				<Badge
 					variant='secondary'
-					className='w-28 justify-start gap-1'
+					className='w-fit sm:w-28 justify-start gap-1'
 				>
 					<WifiOff className='h-3 w-3' />
-					<span>Desconectado</span>
+					<span className='hidden sm:inline'>Desconectado</span>
 				</Badge>
 			)}
 
