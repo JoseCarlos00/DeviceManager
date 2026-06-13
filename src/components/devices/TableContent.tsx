@@ -145,8 +145,8 @@ export default function TableContent() {
 						</div>
 					</div>
 
-					<div className='mb-4 flex flex-wrap gap-4'>
-						<div className='relative flex-1'>
+					<div className='mb-4 flex flex-col sm:flex-row gap-4'>
+						<div className='relative w-full sm:flex-1'>
 							<Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
 							<Input
 								placeholder='Filtrar tabla...'
@@ -175,7 +175,7 @@ export default function TableContent() {
 								}
 							}}
 						>
-							<SelectTrigger className={cn('cursor-pointer sm:w-48', highlightFilter && 'ring-amber-300/40 border-amber-200')}>
+							<SelectTrigger className={cn('w-full cursor-pointer sm:w-48', highlightFilter && 'ring-amber-300/40 border-amber-200')}>
 								<SelectValue placeholder='Filtrar por estado' />
 							</SelectTrigger>
 							<SelectContent className='sm:w-48'>

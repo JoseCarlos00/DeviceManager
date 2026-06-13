@@ -15,8 +15,8 @@ import {
 export default function DataTableViewOptions<TData>({ table }: { table: Table<TData> }) {
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<Button variant='outline' size='sm' className='ml-auto flex h-8 cursor-pointer!'>
+			<DropdownMenuTrigger asChild> 
+				<Button variant='outline' size='sm' className='w-full sm:w-auto sm:ml-auto flex h-8 cursor-pointer!'>
 					<Settings2 className='mr-1 h-4 w-4' />
 					View
 				</Button>
